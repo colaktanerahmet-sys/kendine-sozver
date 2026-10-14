@@ -27,31 +27,59 @@ RENKLER = {
     "gundogumu": ("#2d2340", "#e0a15a"), "yildiz": ("#05060f", "#1f2547"),
 }
 
-HASHTAG = ["#motivasyon", "#kişiselgelişim", "#günlükhatırlatma", "#ilham",
-           "#disiplin", "#farkındalık", "#kendinigeliştir", "#pozitifdüşünce",
-           "#özşefkat", "#alışkanlık", "#hedef", "#reels"]
-TAAHHUT = ["Söz veriyorsan yoruma 🤝 bırak.", "Bu sözü tutacaksan yoruma \"söz\" yaz.",
-           "Varsan yoruma 🤝 bırak, birlikte tutalım."]
-EK = {"sabah": ["Kaydet, gün içinde tekrar bak.", "Bu sözü tutacak birini etiketle.",
-                "Akşam döndüğünde tuttun mu, yaz."],
-      "ogle": ["Şimdi yap, sonra değil.", "Molada bunu hatırlaması gereken birine gönder.",
-               "Günün ikinci yarısı senin."],
-      "aksam": ["Kaydet, zor bir gecede tekrar bak.", "Buna ihtiyacı olan birine gönder.",
-                "Yarın sabah yeni bir söz seni bekliyor."]}
+# ---------- büyüme odaklı açıklama ----------
+# Instagram'ın en güçlü sinyalleri: DM ile gönderme > kaydetme > yorum > beğeni; izlenme süresi + tekrar izleme.
+# Açıklamanın ilk satırı akışta görünen "kanca"; anahtar kelimeler Instagram aramasına (SEO) giriyor.
+# Instagram en fazla 5 hashtag'e izin veriyor; 2 sabit + 3 vakte özel.
+KANCA = {
+    "sabah": ["Güne başlamadan önce bunu oku 👇", "Bu sabah kendine tek bir söz ver 👇",
+              "Bugünün görevi basit ama etkili 👇", "Telefonu açtıysan, bunu da okumuş ol 👇",
+              "Küçük bir söz, bambaşka bir gün 👇", "Bugün bunu yapanlar yorumda buluşsun 👇"],
+    "ogle": ["Günün yarısı geçti. Dur ve bunu oku 👇", "Öğle arası hatırlatması 👇",
+             "Yorulduysan, bu senin için 👇", "5 saniyeni ayır, günün geri kalanı değişsin 👇",
+             "Günün ikinci yarısını kurtaracak tek cümle 👇"],
+    "aksam": ["Uyumadan önce bunu kendine söyle 👇", "Bu gece kendine biraz nazik ol 👇",
+              "Zor bir gün geçirdiysen, bunu oku 👇", "Belki de bunu duyman gerekiyordu 👇",
+              "Günü kapatmadan önce son bir söz 👇"],
+}
+GONDER = {
+    "sabah": ["Bunu bugün birlikte tutacağın birine gönder 📩", "Sabahları erteleyen o arkadaşına gönder 📩"],
+    "ogle": ["Şu an çok yorulan birine gönder 📩", "Mesaide bunaltan birine gönder 📩"],
+    "aksam": ["Bu gece bunu duyması gereken birine gönder 📩", "Kendine fazla yüklenen o kişiye gönder 📩"],
+}
+ETIKET_SABIT = ["#kendinesözver", "#motivasyon"]
+ETIKET_VAKIT = {
+    "sabah": ["#kişiselgelişim", "#disiplin", "#günaydın", "#alışkanlık", "#motivasyonsözleri"],
+    "ogle": ["#kişiselgelişim", "#farkındalık", "#odaklan", "#motivasyonsözleri", "#kendinigeliştir"],
+    "aksam": ["#özşefkat", "#iyiolmak", "#iyigeceler", "#huzur", "#güzelsözler"],
+}
+BASLIK = {"sabah": "Bugün kendine söz ver", "ogle": "Öğlen kendine söz ver", "aksam": "Bu gece kendine söz ver"}
+# Videonun son saniyelerinde beliren çağrı (DM paylaşımı ve kaydetme en çok erişim getirir)
+VIDEO_CTA = ["İhtiyacı olan birine gönder", "Kaydet · zor bir anda tekrar bak", "Söz veriyorsan yoruma «söz» yaz"]
+
+
+def gun_no(oge):
+    return (oge["id"] - 1) // 3 + 1
 
 
 def caption(oge):
     r = random.Random(oge["id"])
-    etiket = " ".join(["#kendinesözver"] + r.sample(HASHTAG, 4))
-    baslik = {"sabah": "Bugün kendine söz ver", "ogle": "Öğlen kendine söz ver",
-              "aksam": "Bu gece kendine söz ver"}[oge["vakit"]]
-    return (f'{baslik}: {oge["soz"]}\n\n{r.choice(TAAHHUT)}\n{r.choice(EK[oge["vakit"]])}\n\n'
-            f'Her gün 3 söz: sabah, öğle ve akşam.\n'
-            f'Takip et 👉 {CFG["sayfa_adi"]}\n\n{etiket}')
+    v = oge["vakit"]
+    etiket = " ".join(ETIKET_SABIT + r.sample(ETIKET_VAKIT[v], 3))
+    return (f'{r.choice(KANCA[v])}\n\n'
+            f'{BASLIK[v]}: "{oge["soz"]}"\n\n'
+            f'🤝 Söz veriyorsan yoruma "söz" yaz.\n'
+            f'📌 Kaydet, zor bir anda tekrar bak.\n'
+            f'{r.choice(GONDER[v])}\n\n'
+            f'Gün {gun_no(oge)} · Her gün 3 söz: ☀️ sabah · 🌤 öğle · 🌙 akşam\n'
+            f'Serinin devamını kaçırmamak için {CFG["sayfa_adi"]} takip et.\n\n'
+            f'Motivasyon sözleri ve kişisel gelişim için her gün küçük bir hatırlatma.\n\n'
+            f'{etiket}')
 
 
 def sure(soz):
-    return round(min(12, max(7.5, 4.5 + len(soz.split()) * 0.4)), 1)
+    # yazıyı rahat okuyup sondaki çağrıyı görecek kadar; kısa kalınca video döngüye girer (tekrar izlenme)
+    return round(min(12, max(8.5, 5.0 + len(soz.split()) * 0.4)), 1)
 
 
 # ---------- metin katmanı ----------
@@ -100,15 +128,32 @@ def metin_png(oge, yol):
     golge = golge.filter(ImageFilter.GaussianBlur(10))
     img.alpha_composite(golge)
 
-    # başlık + ayraç + söz
+    # gün sayacı (seri hissi → takip) + başlık + ayraç + söz
+    gun_font = ImageFont.truetype(CFG["font_alt"], 30)
+    aralikli(ciz, (W / 2, yb - 60), f"GÜN {gun_no(oge)}", gun_font, (255, 255, 255, 170), 6)
     aralikli(ciz, (W / 2, yb), oge["baslik"], baslik_font, (255, 226, 160, 255), 7)
     ciz.line([(W / 2 - 40, yb + 70), (W / 2 + 40, yb + 70)], fill=(255, 226, 160, 200), width=3)
     for i, s in enumerate(satirlar):
         ciz.text((W / 2, y0 + i * satir_h), s, font=font, fill=(255, 255, 255, 255), anchor="ma")
 
-    # sayfa adı
+    # sayfa adı: Reels arayüzünün kapladığı alt bölgenin üstünde kalsın
     kucuk = ImageFont.truetype(CFG["font_alt"], 38)
-    ciz.text((W / 2, H - 330), CFG["sayfa_adi"], font=kucuk, fill=(255, 255, 255, 190), anchor="ma")
+    ciz.text((W / 2, H - 520), CFG["sayfa_adi"], font=kucuk, fill=(255, 255, 255, 200), anchor="ma")
+    img.save(yol)
+    return y0 + toplam
+
+
+def cta_png(oge, yol, y_alt):
+    """Son saniyelerde beliren paylaşım çağrısı."""
+    img = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    ciz = ImageDraw.Draw(img)
+    metin = VIDEO_CTA[oge["id"] % len(VIDEO_CTA)]
+    font = ImageFont.truetype(CFG["font_alt"], 40)
+    gen = ciz.textlength(metin, font=font)
+    y = y_alt + 70
+    ciz.rounded_rectangle([(W - gen) / 2 - 34, y - 18, (W + gen) / 2 + 34, y + 62], radius=40,
+                          fill=(255, 226, 160, 235))
+    ciz.text((W / 2, y + 22), metin, font=font, fill=(30, 20, 40, 255), anchor="mm")
     img.save(yol)
 
 
@@ -188,7 +233,9 @@ def uret(oge, hedef):
     sn = sure(oge["soz"])
     with tempfile.TemporaryDirectory() as g:
         png = Path(g) / "metin.png"
-        metin_png(oge, png)
+        y_alt = metin_png(oge, png)
+        cp = Path(g) / "cta.png"
+        cta_png(oge, cp, y_alt)
         muzik = muzik_sec(oge, sn, g)
         bg = arkaplan_sec(oge)
         if bg:
@@ -202,13 +249,16 @@ def uret(oge, hedef):
             vf = f"[0:v]crop={W}:{H}:0:'600*t/{sn}'[bg]"
         kp = Path(g) / "karartma.png"
         karartma_png(kp)
-        filtre = (vf + f";[1:v]format=rgba,fade=t=in:st=0.3:d=0.9:alpha=1[t];"
-                  f"[bg][3:v]overlay=0:0[bgk];[bgk][t]overlay=0:0,format=yuv420p[v];"
+        # yazı hızlı belirir (ilk saniye kaydırmayı durdurmalı); çağrı son 3 saniyede gelir
+        filtre = (vf + f";[1:v]format=rgba,fade=t=in:st=0.1:d=0.5:alpha=1[t];"
+                  f"[4:v]format=rgba,fade=t=in:st={sn - 3}:d=0.5:alpha=1[c];"
+                  f"[bg][3:v]overlay=0:0[bgk];[bgk][t]overlay=0:0[bgt];[bgt][c]overlay=0:0,format=yuv420p[v];"
                   f"[2:a]atrim=0:{sn},afade=t=in:d=0.8,afade=t=out:st={sn - 1.2}:d=1.2[a]")
         komut = [FFMPEG, "-y", "-loglevel", "error", *girdi,
                  "-loop", "1", "-framerate", str(FPS), "-i", str(png),
                  "-stream_loop", "-1", "-i", str(muzik),
                  "-loop", "1", "-framerate", str(FPS), "-i", str(kp),
+                 "-loop", "1", "-framerate", str(FPS), "-i", str(cp),
                  "-filter_complex", filtre, "-map", "[v]", "-map", "[a]", "-t", str(sn),
                  "-c:v", "libx264", "-preset", "medium", "-crf", "21", "-maxrate", "2500k", "-bufsize", "5000k", "-r", str(FPS),
                  "-c:a", "aac", "-b:a", "128k", "-ar", "44100", "-movflags", "+faststart", str(hedef)]

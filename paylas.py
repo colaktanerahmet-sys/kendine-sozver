@@ -78,7 +78,7 @@ def paylas(cfg, mp4):
     # 1) kapsayıcı oluştur
     kap = cevap(requests.post(f"{API}/{uid}/media", timeout=60, data={
         "media_type": "REELS", "upload_type": "resumable", "caption": aciklama,
-        "share_to_feed": "true", "access_token": t}))
+        "share_to_feed": "true", "thumb_offset": "2000", "access_token": t}))
     kid = kap["id"]
     yukle_url = kap.get("uri") or f"https://rupload.facebook.com/ig-api-upload/v23.0/{kid}"
 
