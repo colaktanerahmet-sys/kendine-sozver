@@ -1,0 +1,12 @@
+config.json
+.venv/
+__pycache__/
+arkaplan/
+arkaplan_elenen/
+muzik/
+sira/
+paylasildi/
+eski_testler/
+icerik_eski.json
+/paylasim_kaydi.csv
+*.part

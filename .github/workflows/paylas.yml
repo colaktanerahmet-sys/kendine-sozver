@@ -1,0 +1,72 @@
+# @kendine_sozver otomatik paylaşım. Saatler UTC; Türkiye = UTC+3.
+name: paylas
+
+on:
+  schedule:
+    - cron: "7 6 * * *"    # 09:07 TR  sabah
+    - cron: "7 10 * * *"   # 13:07 TR  öğle
+    - cron: "7 17 * * *"   # 20:07 TR  akşam
+    - cron: "30 3 * * 1"   # Pazartesi 06:30 TR  anahtar yenileme
+  workflow_dispatch:
+    inputs:
+      vakit:
+        description: "Elle çalıştır"
+        type: choice
+        options: [sabah, ogle, aksam, yenile]
+        default: sabah
+
+permissions:
+  contents: write
+
+concurrency:
+  group: paylas
+  cancel-in-progress: false
+
+jobs:
+  calis:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - run: pip install requests
+
+      - name: Vakti belirle
+        id: v
+        run: |
+          case "${{ github.event.schedule }}" in
+            "7 6 * * *")  v=sabah ;;
+            "7 10 * * *") v=ogle ;;
+            "7 17 * * *") v=aksam ;;
+            "30 3 * * 1") v=yenile ;;
+            *)            v="${{ inputs.vakit }}" ;;
+          esac
+          echo "vakit=$v" >> "$GITHUB_OUTPUT"
+
+      - name: Anahtarı çöz
+        env:
+          ENC_KEY: ${{ secrets.ENC_KEY }}
+        run: |
+          T=$(openssl enc -d -aes-256-cbc -pbkdf2 -pass env:ENC_KEY -in durum/token.enc)
+          echo "::add-mask::$T"
+          echo "IG_ACCESS_TOKEN=$T" >> "$GITHUB_ENV"
+
+      - name: Paylaş
+        env:
+          ENC_KEY: ${{ secrets.ENC_KEY }}
+          IG_USER_ID: ${{ vars.IG_USER_ID }}
+          GH_TOKEN: ${{ github.token }}
+        run: python ci_paylas.py "${{ steps.v.outputs.vakit }}"
+
+      - name: Durumu kaydet
+        if: always()
+        run: |
+          git config user.name "kendine-sozver-bot"
+          git config user.email "bot@users.noreply.github.com"
+          git add durum
+          git diff --cached --quiet || git commit -m "durum: ${{ steps.v.outputs.vakit }} $(date -u +%F)"
+          git push

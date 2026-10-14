@@ -1,0 +1,1262 @@
+[
+ {
+  "id": 1,
+  "vakit": "sabah",
+  "baslik": "BUGÜN KENDİNE SÖZ VER",
+  "tema": "gundogumu",
+  "soz": "Telefonuna bakmadan önce bir bardak su içeceksin."
+ },
+ {
+  "id": 2,
+  "vakit": "ogle",
+  "baslik": "ÖĞLEN KENDİNE SÖZ VER",
+  "tema": "gokyuzu",
+  "soz": "Şimdi 5 dakika ara verip omuzlarını gevşeteceksin."
+ },
+ {
+  "id": 3,
+  "vakit": "aksam",
+  "baslik": "BU GECE KENDİNE SÖZ VER",
+  "tema": "gunbatimi",
+  "soz": "Yapamadıkların için kendini yerden yere vurmayacaksın."
+ },
+ {
+  "id": 4,
+  "vakit": "sabah",
+  "baslik": "BUGÜN KENDİNE SÖZ VER",
+  "tema": "yol",
+  "soz": "Ertelediğin o tek işi bugün bitireceksin."
+ },
+ {
+  "id": 5,
+  "vakit": "ogle",
+  "baslik": "ÖĞLEN KENDİNE SÖZ VER",
+  "tema": "deniz",
+  "soz": "Öğle yemeğini acele etmeden, tadını çıkararak yiyeceksin."
+ },
+ {
+  "id": 6,
+  "vakit": "aksam",
+  "baslik": "BU GECE KENDİNE SÖZ VER",
+  "tema": "yildiz",
+  "soz": "Yatmadan önce telefonu bırakıp zihnini dinlendireceksin."
+ },
+ {
+  "id": 7,
+  "vakit": "sabah",
+  "baslik": "BUGÜN KENDİNE SÖZ VER",
+  "tema": "dag",
+  "soz": "Kendini kimseyle kıyaslamayacaksın."
+ },
+ {
+  "id": 8,
+  "vakit": "ogle",
+  "baslik": "ÖĞLEN KENDİNE SÖZ VER",
+  "tema": "orman",
+  "soz": "Sabah ne olduysa olsun, günün geri kalanını kurtaracaksın."
+ },
+ {
+  "id": 9,
+  "vakit": "aksam",
+  "baslik": "BU GECE KENDİNE SÖZ VER",
+  "tema": "yagmur",
+  "soz": "Bugün iyi giden üç şeyi düşünerek uyuyacaksın."
+ },
+ {
+  "id": 10,
+  "vakit": "sabah",
+  "baslik": "BUGÜN KENDİNE SÖZ VER",
+  "tema": "sehir",
+  "soz": "20 dakika yürüyüşe çıkacaksın. Bahane yok."
+ },
+ {
+  "id": 11,
+  "vakit": "ogle",
+  "baslik": "ÖĞLEN KENDİNE SÖZ VER",
+  "tema": "yol",
+  "soz": "Bir bardak su içip derin bir nefes alacaksın."
+ },
+ {
+  "id": 12,
+  "vakit": "aksam",
+  "baslik": "BU GECE KENDİNE SÖZ VER",
+  "tema": "deniz",
+  "soz": "Yarını bu gece planlayıp sabaha hazır uyanacaksın."
+ },
+ {
+  "id": 13,
+  "vakit": "sabah",
+  "baslik": "BUGÜN KENDİNE SÖZ VER",
+  "tema": "orman",
+  "soz": "En az 10 sayfa kitap okuyacaksın."
+ },
+ {
+  "id": 14,
+  "vakit": "ogle",
+  "baslik": "ÖĞLEN KENDİNE SÖZ VER",
+  "tema": "sehir",
+  "soz": "Telefonunu bırakıp 10 dakika yürüyeceksin."
+ },
+ {
+  "id": 15,
+  "vakit": "aksam",
+  "baslik": "BU GECE KENDİNE SÖZ VER",
+  "tema": "sehir",
+  "soz": "Seni kıran sözleri yatağına taşımayacaksın."
+ },
+ {
+  "id": 16,
+  "vakit": "sabah",
+  "baslik": "BUGÜN KENDİNE SÖZ VER",
+  "tema": "deniz",
+  "soz": "Kimseye kendini kanıtlamaya çalışmayacaksın."
+ },
+ {
+  "id": 17,
+  "vakit": "ogle",
+  "baslik": "ÖĞLEN KENDİNE SÖZ VER",
+  "tema": "dag",
+  "soz": "Sabah ertelediğin işi öğleden sonra bitireceksin."
+ },
+ {
+  "id": 18,
+  "vakit": "aksam",
+  "baslik": "BU GECE KENDİNE SÖZ VER",
+  "tema": "gunbatimi",
+  "soz": "Bugün ne kadar yorulduysan, o kadar gurur duyacaksın."
+ },
+ {
+  "id": 19,
+  "vakit": "sabah",
+  "baslik": "BUGÜN KENDİNE SÖZ VER",
+  "tema": "gokyuzu",
+  "soz": "Bir kez bile \"yapamam\" demeyeceksin."
+ },
+ {
+  "id": 20,
+  "vakit": "ogle",
+  "baslik": "ÖĞLEN KENDİNE SÖZ VER",
+  "tema": "gokyuzu",
+  "soz": "Yorulduysan duraklayacaksın, ama bırakmayacaksın."
+ },
+ {
+  "id": 21,
+  "vakit": "aksam",
+  "baslik": "BU GECE KENDİNE SÖZ VER",
+  "tema": "yildiz",
+  "soz": "Değiştiremediğin şeyleri bu gece bırakacaksın."
+ },
+ {
+  "id": 22,
+  "vakit": "sabah",
+  "baslik": "BUGÜN KENDİNE SÖZ VER",
+  "tema": "gundogumu",
+  "soz": "Sana iyi gelmeyen birine \"hayır\" diyebileceksin."
+ },
+ {
+  "id": 23,
+  "vakit": "ogle",
+  "baslik": "ÖĞLEN KENDİNE SÖZ VER",
+  "tema": "deniz",
+  "soz": "Kötü giden bir sabah, kötü bir gün demek değil. Yeniden başlayacaksın."
+ },
+ {
+  "id": 24,
+  "vakit": "aksam",
+  "baslik": "BU GECE KENDİNE SÖZ VER",
+  "tema": "yagmur",
+  "soz": "Yarın, bugünden bir adım ileride olacaksın."
+ },
+ {
+  "id": 25,
+  "vakit": "sabah",
+  "baslik": "BUGÜN KENDİNE SÖZ VER",
+  "tema": "yol",
+  "soz": "Sosyal medyada amaçsızca kaybolmayacaksın."
+ },
+ {
+  "id": 26,
+  "vakit": "ogle",
+  "baslik": "ÖĞLEN KENDİNE SÖZ VER",
+  "tema": "orman",
+  "soz": "Öğleden sonraki ilk saati en önemli işine ayıracaksın."
+ },
+ {
+  "id": 27,
+  "vakit": "aksam",
+  "baslik": "BU GECE KENDİNE SÖZ VER",
+  "tema": "deniz",
+  "soz": "Kendine, en iyi arkadaşına davrandığın gibi davranacaksın."
+ },
+ {
+  "id": 28,
+  "vakit": "sabah",
+  "baslik": "BUGÜN KENDİNE SÖZ VER",
+  "tema": "dag",
+  "soz": "Sevdiğin birini arayıp sesini duyacaksın."
+ },
+ {
+  "id": 29,
+  "vakit": "ogle",
+  "baslik": "ÖĞLEN KENDİNE SÖZ VER",
+  "tema": "yol",
+  "soz": "Bir dakika durup \"şu an ne hissediyorum?\" diye soracaksın."
+ },
+ {
+  "id": 30,
+  "vakit": "aksam",
+  "baslik": "BU GECE KENDİNE SÖZ VER",
+  "tema": "sehir",
+  "soz": "Kimsenin yorumunu kafanda tekrar tekrar çevirmeyeceksin."
+ },
+ {
+  "id": 31,
+  "vakit": "sabah",
+  "baslik": "BUGÜN KENDİNE SÖZ VER",
+  "tema": "sehir",
+  "soz": "Şikâyet etmeyeceksin; çözüm arayacaksın."
+ },
+ {
+  "id": 32,
+  "vakit": "ogle",
+  "baslik": "ÖĞLEN KENDİNE SÖZ VER",
+  "tema": "sehir",
+  "soz": "Kimsenin enerjini çalmasına izin vermeyeceksin."
+ },
+ {
+  "id": 33,
+  "vakit": "aksam",
+  "baslik": "BU GECE KENDİNE SÖZ VER",
+  "tema": "gunbatimi",
+  "soz": "Erken yatıp bedenine hak ettiği dinlenmeyi vereceksin."
+ },
+ {
+  "id": 34,
+  "vakit": "sabah",
+  "baslik": "BUGÜN KENDİNE SÖZ VER",
+  "tema": "orman",
+  "soz": "Yatağını toplayarak güne bir zaferle başlayacaksın."
+ },
+ {
+  "id": 35,
+  "vakit": "ogle",
+  "baslik": "ÖĞLEN KENDİNE SÖZ VER",
+  "tema": "dag",
+  "soz": "Gün ortasında kendine küçük bir ödül vereceksin."
+ },
+ {
+  "id": 36,
+  "vakit": "aksam",
+  "baslik": "BU GECE KENDİNE SÖZ VER",
+  "tema": "yildiz",
+  "soz": "Mükemmel olmadığın için kendinden özür dilemeyeceksin."
+ },
+ {
+  "id": 37,
+  "vakit": "sabah",
+  "baslik": "BUGÜN KENDİNE SÖZ VER",
+  "tema": "deniz",
+  "soz": "Küçük de olsa hedefine bir adım atacaksın."
+ },
+ {
+  "id": 38,
+  "vakit": "ogle",
+  "baslik": "ÖĞLEN KENDİNE SÖZ VER",
+  "tema": "gokyuzu",
+  "soz": "Gözlerini ekrandan kaldırıp uzaklara bakacaksın."
+ },
+ {
+  "id": 39,
+  "vakit": "aksam",
+  "baslik": "BU GECE KENDİNE SÖZ VER",
+  "tema": "yagmur",
+  "soz": "Bugünün hatalarını yarının dersine çevireceksin."
+ },
+ {
+  "id": 40,
+  "vakit": "sabah",
+  "baslik": "BUGÜN KENDİNE SÖZ VER",
+  "tema": "gokyuzu",
+  "soz": "Aynaya bakıp kendine güzel bir şey söyleyeceksin."
+ },
+ {
+  "id": 41,
+  "vakit": "ogle",
+  "baslik": "ÖĞLEN KENDİNE SÖZ VER",
+  "tema": "deniz",
+  "soz": "Sabah koyduğun hedefi hatırlayıp ona döneceksin."
+ },
+ {
+  "id": 42,
+  "vakit": "aksam",
+  "baslik": "BU GECE KENDİNE SÖZ VER",
+  "tema": "deniz",
+  "soz": "Geçmişte kalanı geçmişte bırakacaksın."
+ },
+ {
+  "id": 43,
+  "vakit": "sabah",
+  "baslik": "BUGÜN KENDİNE SÖZ VER",
+  "tema": "gundogumu",
+  "soz": "Bir saatini sadece kendini geliştirmeye ayıracaksın."
+ },
+ {
+  "id": 44,
+  "vakit": "ogle",
+  "baslik": "ÖĞLEN KENDİNE SÖZ VER",
+  "tema": "orman",
+  "soz": "Her mesajı hemen cevaplamak zorunda olmadığını hatırlayacaksın."
+ },
+ {
+  "id": 45,
+  "vakit": "aksam",
+  "baslik": "BU GECE KENDİNE SÖZ VER",
+  "tema": "sehir",
+  "soz": "Kendini affedeceksin. Bunu hak ediyorsun."
+ },
+ {
+  "id": 46,
+  "vakit": "sabah",
+  "baslik": "BUGÜN KENDİNE SÖZ VER",
+  "tema": "yol",
+  "soz": "Dedikoduya katılmayacaksın."
+ },
+ {
+  "id": 47,
+  "vakit": "ogle",
+  "baslik": "ÖĞLEN KENDİNE SÖZ VER",
+  "tema": "yol",
+  "soz": "Öğle arasını boş boş kaydırarak değil, kendine ayırarak geçireceksin."
+ },
+ {
+  "id": 48,
+  "vakit": "aksam",
+  "baslik": "BU GECE KENDİNE SÖZ VER",
+  "tema": "gunbatimi",
+  "soz": "Yarın sabah ilk iş, ertelediğin şeye başlayacaksın."
+ },
+ {
+  "id": 49,
+  "vakit": "sabah",
+  "baslik": "BUGÜN KENDİNE SÖZ VER",
+  "tema": "dag",
+  "soz": "Tanımadığın birine gülümseyeceksin."
+ },
+ {
+  "id": 50,
+  "vakit": "ogle",
+  "baslik": "ÖĞLEN KENDİNE SÖZ VER",
+  "tema": "sehir",
+  "soz": "Dik oturacak, omuzlarını geriye alacaksın."
+ },
+ {
+  "id": 51,
+  "vakit": "aksam",
+  "baslik": "BU GECE KENDİNE SÖZ VER",
+  "tema": "yildiz",
+  "soz": "Yalnız hissetsen bile vazgeçmeyeceksin."
+ },
+ {
+  "id": 52,
+  "vakit": "sabah",
+  "baslik": "BUGÜN KENDİNE SÖZ VER",
+  "tema": "sehir",
+  "soz": "Listendeki en zor işle başlayacaksın."
+ },
+ {
+  "id": 53,
+  "vakit": "ogle",
+  "baslik": "ÖĞLEN KENDİNE SÖZ VER",
+  "tema": "dag",
+  "soz": "Gün yarılandı; kalan yarısını daha iyi yapacaksın."
+ },
+ {
+  "id": 54,
+  "vakit": "aksam",
+  "baslik": "BU GECE KENDİNE SÖZ VER",
+  "tema": "yagmur",
+  "soz": "Seni üzen kişiyi bu gece düşüncelerinden çıkaracaksın."
+ },
+ {
+  "id": 55,
+  "vakit": "sabah",
+  "baslik": "BUGÜN KENDİNE SÖZ VER",
+  "tema": "orman",
+  "soz": "Yemeğini ekrana bakmadan yiyeceksin."
+ },
+ {
+  "id": 56,
+  "vakit": "ogle",
+  "baslik": "ÖĞLEN KENDİNE SÖZ VER",
+  "tema": "gokyuzu",
+  "soz": "Seni geren kişiye tepki vermeden önce üç nefes alacaksın."
+ },
+ {
+  "id": 57,
+  "vakit": "aksam",
+  "baslik": "BU GECE KENDİNE SÖZ VER",
+  "tema": "deniz",
+  "soz": "Bugün attığın küçük adımları küçümsemeyeceksin."
+ },
+ {
+  "id": 58,
+  "vakit": "sabah",
+  "baslik": "BUGÜN KENDİNE SÖZ VER",
+  "tema": "deniz",
+  "soz": "Öğrendiğin yeni bir şeyi not alacaksın."
+ },
+ {
+  "id": 59,
+  "vakit": "ogle",
+  "baslik": "ÖĞLEN KENDİNE SÖZ VER",
+  "tema": "deniz",
+  "soz": "Bir arkadaşına içten, güzel bir söz söyleyeceksin."
+ },
+ {
+  "id": 60,
+  "vakit": "aksam",
+  "baslik": "BU GECE KENDİNE SÖZ VER",
+  "tema": "sehir",
+  "soz": "Endişelerini kâğıda yazıp bir kenara bırakacaksın."
+ },
+ {
+  "id": 61,
+  "vakit": "sabah",
+  "baslik": "BUGÜN KENDİNE SÖZ VER",
+  "tema": "gokyuzu",
+  "soz": "Biri sana kötü davransa da sakinliğini koruyacaksın."
+ },
+ {
+  "id": 62,
+  "vakit": "ogle",
+  "baslik": "ÖĞLEN KENDİNE SÖZ VER",
+  "tema": "orman",
+  "soz": "Yapılacaklar listenden bir maddeyi daha sileceksin."
+ },
+ {
+  "id": 63,
+  "vakit": "aksam",
+  "baslik": "BU GECE KENDİNE SÖZ VER",
+  "tema": "gunbatimi",
+  "soz": "Kimsenin hayatının göründüğü kadar kusursuz olmadığını unutmayacaksın."
+ },
+ {
+  "id": 64,
+  "vakit": "sabah",
+  "baslik": "BUGÜN KENDİNE SÖZ VER",
+  "tema": "gundogumu",
+  "soz": "Geçmişi değil, bugünü düşüneceksin."
+ },
+ {
+  "id": 65,
+  "vakit": "ogle",
+  "baslik": "ÖĞLEN KENDİNE SÖZ VER",
+  "tema": "yol",
+  "soz": "Öğleden sonra şekerli bir şey yerine meyve seçeceksin."
+ },
+ {
+  "id": 66,
+  "vakit": "aksam",
+  "baslik": "BU GECE KENDİNE SÖZ VER",
+  "tema": "yildiz",
+  "soz": "Kendine biraz şefkat göstereceksin."
+ },
+ {
+  "id": 67,
+  "vakit": "sabah",
+  "baslik": "BUGÜN KENDİNE SÖZ VER",
+  "tema": "yol",
+  "soz": "Söz verdiğin saatte orada olacaksın."
+ },
+ {
+  "id": 68,
+  "vakit": "ogle",
+  "baslik": "ÖĞLEN KENDİNE SÖZ VER",
+  "tema": "sehir",
+  "soz": "\"Çok yoğunum\" bahanesine sığınmayacaksın."
+ },
+ {
+  "id": 69,
+  "vakit": "aksam",
+  "baslik": "BU GECE KENDİNE SÖZ VER",
+  "tema": "yagmur",
+  "soz": "Yarın, bugünkü bahaneyi bir daha kullanmayacaksın."
+ },
+ {
+  "id": 70,
+  "vakit": "sabah",
+  "baslik": "BUGÜN KENDİNE SÖZ VER",
+  "tema": "dag",
+  "soz": "En az bir kez, içten bir \"teşekkür ederim\" diyeceksin."
+ },
+ {
+  "id": 71,
+  "vakit": "ogle",
+  "baslik": "ÖĞLEN KENDİNE SÖZ VER",
+  "tema": "dag",
+  "soz": "Aynı anda her şeye değil, tek bir işe odaklanacaksın."
+ },
+ {
+  "id": 72,
+  "vakit": "aksam",
+  "baslik": "BU GECE KENDİNE SÖZ VER",
+  "tema": "deniz",
+  "soz": "Sahip olduklarına bir dakika şükredeceksin."
+ },
+ {
+  "id": 73,
+  "vakit": "sabah",
+  "baslik": "BUGÜN KENDİNE SÖZ VER",
+  "tema": "sehir",
+  "soz": "Odana, masana biraz düzen getireceksin."
+ },
+ {
+  "id": 74,
+  "vakit": "ogle",
+  "baslik": "ÖĞLEN KENDİNE SÖZ VER",
+  "tema": "gokyuzu",
+  "soz": "Biraz güneş alıp yüzünü gökyüzüne döneceksin."
+ },
+ {
+  "id": 75,
+  "vakit": "aksam",
+  "baslik": "BU GECE KENDİNE SÖZ VER",
+  "tema": "sehir",
+  "soz": "Hayallerinden utanmayacaksın."
+ },
+ {
+  "id": 76,
+  "vakit": "sabah",
+  "baslik": "BUGÜN KENDİNE SÖZ VER",
+  "tema": "orman",
+  "soz": "Bir hatanı kabul edip ondan ders çıkaracaksın."
+ },
+ {
+  "id": 77,
+  "vakit": "ogle",
+  "baslik": "ÖĞLEN KENDİNE SÖZ VER",
+  "tema": "deniz",
+  "soz": "Şimdiye kadar başardıklarını görmezden gelmeyeceksin."
+ },
+ {
+  "id": 78,
+  "vakit": "aksam",
+  "baslik": "BU GECE KENDİNE SÖZ VER",
+  "tema": "gunbatimi",
+  "soz": "Ekran yerine birkaç sayfa okuyarak uyuyacaksın."
+ },
+ {
+  "id": 79,
+  "vakit": "sabah",
+  "baslik": "BUGÜN KENDİNE SÖZ VER",
+  "tema": "deniz",
+  "soz": "Başkalarının fikrine göre değil, kendi değerlerine göre karar vereceksin."
+ },
+ {
+  "id": 80,
+  "vakit": "ogle",
+  "baslik": "ÖĞLEN KENDİNE SÖZ VER",
+  "tema": "orman",
+  "soz": "Kimseyle yarışmadan, kendi temponda ilerleyeceksin."
+ },
+ {
+  "id": 81,
+  "vakit": "aksam",
+  "baslik": "BU GECE KENDİNE SÖZ VER",
+  "tema": "yildiz",
+  "soz": "Kimseye kendini açıklamak zorunda hissetmeyeceksin."
+ },
+ {
+  "id": 82,
+  "vakit": "sabah",
+  "baslik": "BUGÜN KENDİNE SÖZ VER",
+  "tema": "gokyuzu",
+  "soz": "Kafana takılan şeyi kâğıda yazıp zihninden çıkaracaksın."
+ },
+ {
+  "id": 83,
+  "vakit": "ogle",
+  "baslik": "ÖĞLEN KENDİNE SÖZ VER",
+  "tema": "yol",
+  "soz": "Sevdiğin bir şarkıyı açıp enerjini toplayacaksın."
+ },
+ {
+  "id": 84,
+  "vakit": "aksam",
+  "baslik": "BU GECE KENDİNE SÖZ VER",
+  "tema": "yagmur",
+  "soz": "Bitmeyen işleri dert etmeden, yarına güvenle uyuyacaksın."
+ },
+ {
+  "id": 85,
+  "vakit": "sabah",
+  "baslik": "BUGÜN KENDİNE SÖZ VER",
+  "tema": "gundogumu",
+  "soz": "Motivasyonu beklemeyeceksin; disiplinle başlayacaksın."
+ },
+ {
+  "id": 86,
+  "vakit": "ogle",
+  "baslik": "ÖĞLEN KENDİNE SÖZ VER",
+  "tema": "sehir",
+  "soz": "Hata yaptıysan düzeltip yoluna devam edeceksin."
+ },
+ {
+  "id": 87,
+  "vakit": "aksam",
+  "baslik": "BU GECE KENDİNE SÖZ VER",
+  "tema": "deniz",
+  "soz": "Ne kadar yavaş olursa olsun, ilerlediğini kabul edeceksin."
+ },
+ {
+  "id": 88,
+  "vakit": "sabah",
+  "baslik": "BUGÜN KENDİNE SÖZ VER",
+  "tema": "yol",
+  "soz": "Kendine ayırdığın zamanı boşa geçmiş saymayacaksın."
+ },
+ {
+  "id": 89,
+  "vakit": "ogle",
+  "baslik": "ÖĞLEN KENDİNE SÖZ VER",
+  "tema": "dag",
+  "soz": "Öğleden sonra yorgunluğuna teslim olmayacaksın."
+ },
+ {
+  "id": 90,
+  "vakit": "aksam",
+  "baslik": "BU GECE KENDİNE SÖZ VER",
+  "tema": "sehir",
+  "soz": "Seni sevenlere \"iyi ki varsın\" diyeceksin."
+ },
+ {
+  "id": 91,
+  "vakit": "sabah",
+  "baslik": "BUGÜN KENDİNE SÖZ VER",
+  "tema": "dag",
+  "soz": "Bir kitap, bir podcast, bir ders… Yeni bir şey öğreneceksin."
+ },
+ {
+  "id": 92,
+  "vakit": "ogle",
+  "baslik": "ÖĞLEN KENDİNE SÖZ VER",
+  "tema": "gokyuzu",
+  "soz": "Yüzünü yıkayıp zihnini tazeleyeceksin."
+ },
+ {
+  "id": 93,
+  "vakit": "aksam",
+  "baslik": "BU GECE KENDİNE SÖZ VER",
+  "tema": "gunbatimi",
+  "soz": "Değerini başkalarının davranışlarına göre ölçmeyeceksin."
+ },
+ {
+  "id": 94,
+  "vakit": "sabah",
+  "baslik": "BUGÜN KENDİNE SÖZ VER",
+  "tema": "sehir",
+  "soz": "Kimse bakmıyorken de elinden gelenin en iyisini yapacaksın."
+ },
+ {
+  "id": 95,
+  "vakit": "ogle",
+  "baslik": "ÖĞLEN KENDİNE SÖZ VER",
+  "tema": "deniz",
+  "soz": "Kafandaki dağınık düşünceleri bir kâğıda dökeceksin."
+ },
+ {
+  "id": 96,
+  "vakit": "aksam",
+  "baslik": "BU GECE KENDİNE SÖZ VER",
+  "tema": "yildiz",
+  "soz": "Zor bir gün, kötü bir hayat demek değil. Bunu hatırlayacaksın."
+ },
+ {
+  "id": 97,
+  "vakit": "sabah",
+  "baslik": "BUGÜN KENDİNE SÖZ VER",
+  "tema": "orman",
+  "soz": "\"Sonra\"yı \"şimdi\"ye çevireceksin."
+ },
+ {
+  "id": 98,
+  "vakit": "ogle",
+  "baslik": "ÖĞLEN KENDİNE SÖZ VER",
+  "tema": "orman",
+  "soz": "Önemsiz işlere \"sonra\" diyebileceksin."
+ },
+ {
+  "id": 99,
+  "vakit": "aksam",
+  "baslik": "BU GECE KENDİNE SÖZ VER",
+  "tema": "yagmur",
+  "soz": "Yarın, kendine verdiği sözü tutan biri olacaksın."
+ },
+ {
+  "id": 100,
+  "vakit": "sabah",
+  "baslik": "BUGÜN KENDİNE SÖZ VER",
+  "tema": "deniz",
+  "soz": "Bedenine iyi bakacaksın: su, hareket, düzgün yemek."
+ },
+ {
+  "id": 101,
+  "vakit": "ogle",
+  "baslik": "ÖĞLEN KENDİNE SÖZ VER",
+  "tema": "yol",
+  "soz": "Sevdiğin birine \"nasılsın?\" diye yazacaksın."
+ },
+ {
+  "id": 102,
+  "vakit": "aksam",
+  "baslik": "BU GECE KENDİNE SÖZ VER",
+  "tema": "deniz",
+  "soz": "\"Keşke\"leri değil, \"iyi ki\"leri sayacaksın."
+ },
+ {
+  "id": 103,
+  "vakit": "sabah",
+  "baslik": "BUGÜN KENDİNE SÖZ VER",
+  "tema": "gokyuzu",
+  "soz": "Seni geren haberlere bugün ara vereceksin."
+ },
+ {
+  "id": 104,
+  "vakit": "ogle",
+  "baslik": "ÖĞLEN KENDİNE SÖZ VER",
+  "tema": "sehir",
+  "soz": "Günün geri kalanında şikâyet yerine çözüm konuşacaksın."
+ },
+ {
+  "id": 105,
+  "vakit": "aksam",
+  "baslik": "BU GECE KENDİNE SÖZ VER",
+  "tema": "sehir",
+  "soz": "Herkesi memnun edemediysen de kendine kızmayacaksın."
+ },
+ {
+  "id": 106,
+  "vakit": "sabah",
+  "baslik": "BUGÜN KENDİNE SÖZ VER",
+  "tema": "gundogumu",
+  "soz": "Hayalin için en az 15 dakika çalışacaksın."
+ },
+ {
+  "id": 107,
+  "vakit": "ogle",
+  "baslik": "ÖĞLEN KENDİNE SÖZ VER",
+  "tema": "dag",
+  "soz": "Ayağa kalkıp biraz esneyeceksin. Bedenin teşekkür edecek."
+ },
+ {
+  "id": 108,
+  "vakit": "aksam",
+  "baslik": "BU GECE KENDİNE SÖZ VER",
+  "tema": "gunbatimi",
+  "soz": "Bir gecelik uykunun çok şeyi değiştirebileceğini hatırlayacaksın."
+ },
+ {
+  "id": 109,
+  "vakit": "sabah",
+  "baslik": "BUGÜN KENDİNE SÖZ VER",
+  "tema": "yol",
+  "soz": "Bir arkadaşına moral verecek bir mesaj atacaksın."
+ },
+ {
+  "id": 110,
+  "vakit": "ogle",
+  "baslik": "ÖĞLEN KENDİNE SÖZ VER",
+  "tema": "gokyuzu",
+  "soz": "Başkalarının acelesini kendi stresin yapmayacaksın."
+ },
+ {
+  "id": 111,
+  "vakit": "aksam",
+  "baslik": "BU GECE KENDİNE SÖZ VER",
+  "tema": "yildiz",
+  "soz": "Kaybettiklerine değil, kalanlara odaklanacaksın."
+ },
+ {
+  "id": 112,
+  "vakit": "sabah",
+  "baslik": "BUGÜN KENDİNE SÖZ VER",
+  "tema": "dag",
+  "soz": "Kendine karşı sabırlı olacaksın."
+ },
+ {
+  "id": 113,
+  "vakit": "ogle",
+  "baslik": "ÖĞLEN KENDİNE SÖZ VER",
+  "tema": "deniz",
+  "soz": "Bugün kaç kez gülümsediğini kendine soracaksın."
+ },
+ {
+  "id": 114,
+  "vakit": "aksam",
+  "baslik": "BU GECE KENDİNE SÖZ VER",
+  "tema": "yagmur",
+  "soz": "Kendine dürüst olacaksın: Neyi değiştirmen gerekiyor?"
+ },
+ {
+  "id": 115,
+  "vakit": "sabah",
+  "baslik": "BUGÜN KENDİNE SÖZ VER",
+  "tema": "sehir",
+  "soz": "O zor konuşmayı artık ertelemeyeceksin."
+ },
+ {
+  "id": 116,
+  "vakit": "ogle",
+  "baslik": "ÖĞLEN KENDİNE SÖZ VER",
+  "tema": "orman",
+  "soz": "Zor görünen işi küçük parçalara bölüp ilkine başlayacaksın."
+ },
+ {
+  "id": 117,
+  "vakit": "aksam",
+  "baslik": "BU GECE KENDİNE SÖZ VER",
+  "tema": "deniz",
+  "soz": "Yarın biraz daha cesur olacaksın."
+ },
+ {
+  "id": 118,
+  "vakit": "sabah",
+  "baslik": "BUGÜN KENDİNE SÖZ VER",
+  "tema": "orman",
+  "soz": "Paranı düşünmeden harcamayacaksın."
+ },
+ {
+  "id": 119,
+  "vakit": "ogle",
+  "baslik": "ÖĞLEN KENDİNE SÖZ VER",
+  "tema": "yol",
+  "soz": "Kahveni bir dakika sessizce, sadece kahve için içeceksin."
+ },
+ {
+  "id": 120,
+  "vakit": "aksam",
+  "baslik": "BU GECE KENDİNE SÖZ VER",
+  "tema": "sehir",
+  "soz": "Başkalarının hikâyesinde kendini kötü karakter yapmayacaksın."
+ },
+ {
+  "id": 121,
+  "vakit": "sabah",
+  "baslik": "BUGÜN KENDİNE SÖZ VER",
+  "tema": "deniz",
+  "soz": "Birine yardım edeceksin, karşılık beklemeden."
+ },
+ {
+  "id": 122,
+  "vakit": "ogle",
+  "baslik": "ÖĞLEN KENDİNE SÖZ VER",
+  "tema": "sehir",
+  "soz": "Sabahki tartışmayı öğleden sonraya taşımayacaksın."
+ },
+ {
+  "id": 123,
+  "vakit": "aksam",
+  "baslik": "BU GECE KENDİNE SÖZ VER",
+  "tema": "gunbatimi",
+  "soz": "İçinde tuttuğun o sözü yarın söyleyeceksin."
+ },
+ {
+  "id": 124,
+  "vakit": "sabah",
+  "baslik": "BUGÜN KENDİNE SÖZ VER",
+  "tema": "gokyuzu",
+  "soz": "Mükemmel olmasını beklemeyeceksin; bitireceksin."
+ },
+ {
+  "id": 125,
+  "vakit": "ogle",
+  "baslik": "ÖĞLEN KENDİNE SÖZ VER",
+  "tema": "dag",
+  "soz": "Gün ortasında bile yeniden başlayabileceğini hatırlayacaksın."
+ },
+ {
+  "id": 126,
+  "vakit": "aksam",
+  "baslik": "BU GECE KENDİNE SÖZ VER",
+  "tema": "yildiz",
+  "soz": "Yorgunluğunu tembellik sanmayacaksın. Dinleneceksin."
+ },
+ {
+  "id": 127,
+  "vakit": "sabah",
+  "baslik": "BUGÜN KENDİNE SÖZ VER",
+  "tema": "gundogumu",
+  "soz": "Acele etmeden, nefes alarak yaşayacaksın."
+ },
+ {
+  "id": 128,
+  "vakit": "ogle",
+  "baslik": "ÖĞLEN KENDİNE SÖZ VER",
+  "tema": "gokyuzu",
+  "soz": "Molanı suçluluk duymadan vereceksin."
+ },
+ {
+  "id": 129,
+  "vakit": "aksam",
+  "baslik": "BU GECE KENDİNE SÖZ VER",
+  "tema": "yagmur",
+  "soz": "Zihnindeki gürültüyü susturup sadece nefes alacaksın."
+ },
+ {
+  "id": 130,
+  "vakit": "sabah",
+  "baslik": "BUGÜN KENDİNE SÖZ VER",
+  "tema": "yol",
+  "soz": "Kendine en az bir saat ekransız zaman ayıracaksın."
+ },
+ {
+  "id": 131,
+  "vakit": "ogle",
+  "baslik": "ÖĞLEN KENDİNE SÖZ VER",
+  "tema": "deniz",
+  "soz": "Yeni bir şey öğrenmek için 10 dakika ayıracaksın."
+ },
+ {
+  "id": 132,
+  "vakit": "aksam",
+  "baslik": "BU GECE KENDİNE SÖZ VER",
+  "tema": "deniz",
+  "soz": "Sana ait olmayan yükleri sırtından indireceksin."
+ },
+ {
+  "id": 133,
+  "vakit": "sabah",
+  "baslik": "BUGÜN KENDİNE SÖZ VER",
+  "tema": "dag",
+  "soz": "Bir korkunun üzerine, küçük de olsa, gideceksin."
+ },
+ {
+  "id": 134,
+  "vakit": "ogle",
+  "baslik": "ÖĞLEN KENDİNE SÖZ VER",
+  "tema": "orman",
+  "soz": "Ertelediğin o telefonu bugün açacaksın."
+ },
+ {
+  "id": 135,
+  "vakit": "aksam",
+  "baslik": "BU GECE KENDİNE SÖZ VER",
+  "tema": "sehir",
+  "soz": "Yarın, bugünkü senin gurur duyacağı biri olacaksın."
+ },
+ {
+  "id": 136,
+  "vakit": "sabah",
+  "baslik": "BUGÜN KENDİNE SÖZ VER",
+  "tema": "sehir",
+  "soz": "Kimseyi suçlamayacaksın. Kendini bile."
+ },
+ {
+  "id": 137,
+  "vakit": "ogle",
+  "baslik": "ÖĞLEN KENDİNE SÖZ VER",
+  "tema": "yol",
+  "soz": "Kendine \"iyi gidiyorsun\" diyeceksin."
+ },
+ {
+  "id": 138,
+  "vakit": "aksam",
+  "baslik": "BU GECE KENDİNE SÖZ VER",
+  "tema": "gunbatimi",
+  "soz": "Kimse görmese de doğru olanı yapmaya devam edeceksin."
+ },
+ {
+  "id": 139,
+  "vakit": "sabah",
+  "baslik": "BUGÜN KENDİNE SÖZ VER",
+  "tema": "orman",
+  "soz": "Ailene biraz daha fazla zaman ayıracaksın."
+ },
+ {
+  "id": 140,
+  "vakit": "ogle",
+  "baslik": "ÖĞLEN KENDİNE SÖZ VER",
+  "tema": "sehir",
+  "soz": "Dikkatini dağıtan bildirimleri bir saatliğine kapatacaksın."
+ },
+ {
+  "id": 141,
+  "vakit": "aksam",
+  "baslik": "BU GECE KENDİNE SÖZ VER",
+  "tema": "yildiz",
+  "soz": "Kendine \"elimden geleni yaptım\" diyebileceksin."
+ },
+ {
+  "id": 142,
+  "vakit": "sabah",
+  "baslik": "BUGÜN KENDİNE SÖZ VER",
+  "tema": "deniz",
+  "soz": "Yeni bir alışkanlığın ilk gününü başlatacaksın."
+ },
+ {
+  "id": 143,
+  "vakit": "ogle",
+  "baslik": "ÖĞLEN KENDİNE SÖZ VER",
+  "tema": "dag",
+  "soz": "Tembellikle dinlenme arasındaki farkı bileceksin."
+ },
+ {
+  "id": 144,
+  "vakit": "aksam",
+  "baslik": "BU GECE KENDİNE SÖZ VER",
+  "tema": "yagmur",
+  "soz": "Seni sınırlayan inançları tek tek sorgulayacaksın."
+ },
+ {
+  "id": 145,
+  "vakit": "sabah",
+  "baslik": "BUGÜN KENDİNE SÖZ VER",
+  "tema": "gokyuzu",
+  "soz": "Seni yoran kişiye enerjini vermeyeceksin."
+ },
+ {
+  "id": 146,
+  "vakit": "ogle",
+  "baslik": "ÖĞLEN KENDİNE SÖZ VER",
+  "tema": "gokyuzu",
+  "soz": "Sabahki enerjini kaybettiysen, yeniden toplayacaksın."
+ },
+ {
+  "id": 147,
+  "vakit": "aksam",
+  "baslik": "BU GECE KENDİNE SÖZ VER",
+  "tema": "deniz",
+  "soz": "İyi şeylerin sana da olabileceğine inanacaksın."
+ },
+ {
+  "id": 148,
+  "vakit": "sabah",
+  "baslik": "BUGÜN KENDİNE SÖZ VER",
+  "tema": "gundogumu",
+  "soz": "\"Hayır\"ı suçluluk duymadan söyleyeceksin."
+ },
+ {
+  "id": 149,
+  "vakit": "ogle",
+  "baslik": "ÖĞLEN KENDİNE SÖZ VER",
+  "tema": "deniz",
+  "soz": "Tanımadığın birine kibar bir söz söyleyeceksin."
+ },
+ {
+  "id": 150,
+  "vakit": "aksam",
+  "baslik": "BU GECE KENDİNE SÖZ VER",
+  "tema": "sehir",
+  "soz": "Yarın daha az düşünüp daha çok yapacaksın."
+ },
+ {
+  "id": 151,
+  "vakit": "sabah",
+  "baslik": "BUGÜN KENDİNE SÖZ VER",
+  "tema": "yol",
+  "soz": "Planını yapacak ve ona sadık kalacaksın."
+ },
+ {
+  "id": 152,
+  "vakit": "ogle",
+  "baslik": "ÖĞLEN KENDİNE SÖZ VER",
+  "tema": "orman",
+  "soz": "Bugünü \"kayıp gün\" ilan etmek için çok erken olduğunu bileceksin."
+ },
+ {
+  "id": 153,
+  "vakit": "aksam",
+  "baslik": "BU GECE KENDİNE SÖZ VER",
+  "tema": "gunbatimi",
+  "soz": "Kendini kaybetmek pahasına kimseyi tutmayacaksın."
+ },
+ {
+  "id": 154,
+  "vakit": "sabah",
+  "baslik": "BUGÜN KENDİNE SÖZ VER",
+  "tema": "dag",
+  "soz": "Kendini başkalarıyla değil, dünkü halinle ölçeceksin."
+ },
+ {
+  "id": 155,
+  "vakit": "ogle",
+  "baslik": "ÖĞLEN KENDİNE SÖZ VER",
+  "tema": "yol",
+  "soz": "Masandaki dağınıklığı iki dakikada toplayacaksın."
+ },
+ {
+  "id": 156,
+  "vakit": "aksam",
+  "baslik": "BU GECE KENDİNE SÖZ VER",
+  "tema": "yildiz",
+  "soz": "Bugünün yorgunluğunu yarının umuduyla değiştireceksin."
+ },
+ {
+  "id": 157,
+  "vakit": "sabah",
+  "baslik": "BUGÜN KENDİNE SÖZ VER",
+  "tema": "sehir",
+  "soz": "5 dakika durup sadece nefesini dinleyeceksin."
+ },
+ {
+  "id": 158,
+  "vakit": "ogle",
+  "baslik": "ÖĞLEN KENDİNE SÖZ VER",
+  "tema": "sehir",
+  "soz": "Kendini başkalarının beklentileriyle tüketmeyeceksin."
+ },
+ {
+  "id": 159,
+  "vakit": "aksam",
+  "baslik": "BU GECE KENDİNE SÖZ VER",
+  "tema": "yagmur",
+  "soz": "Kendine kırıcı tek bir söz söylemeyeceksin."
+ },
+ {
+  "id": 160,
+  "vakit": "sabah",
+  "baslik": "BUGÜN KENDİNE SÖZ VER",
+  "tema": "orman",
+  "soz": "Bahane değil, sonuç üreteceksin."
+ },
+ {
+  "id": 161,
+  "vakit": "ogle",
+  "baslik": "ÖĞLEN KENDİNE SÖZ VER",
+  "tema": "dag",
+  "soz": "Akşama kadar bir şeyi gerçekten bitireceksin."
+ },
+ {
+  "id": 162,
+  "vakit": "aksam",
+  "baslik": "BU GECE KENDİNE SÖZ VER",
+  "tema": "deniz",
+  "soz": "Hayatındaki küçük güzellikleri görmeyi öğreneceksin."
+ },
+ {
+  "id": 163,
+  "vakit": "sabah",
+  "baslik": "BUGÜN KENDİNE SÖZ VER",
+  "tema": "deniz",
+  "soz": "Kendini küçümseyen düşünceleri fark edip durduracaksın."
+ },
+ {
+  "id": 164,
+  "vakit": "ogle",
+  "baslik": "ÖĞLEN KENDİNE SÖZ VER",
+  "tema": "gokyuzu",
+  "soz": "Seni mutlu eden küçük bir şeyi fark edeceksin."
+ },
+ {
+  "id": 165,
+  "vakit": "aksam",
+  "baslik": "BU GECE KENDİNE SÖZ VER",
+  "tema": "sehir",
+  "soz": "Bir şey ters gitti diye her şeyin ters gittiğine inanmayacaksın."
+ },
+ {
+  "id": 166,
+  "vakit": "sabah",
+  "baslik": "BUGÜN KENDİNE SÖZ VER",
+  "tema": "gokyuzu",
+  "soz": "Açık havaya çıkıp biraz güneş alacaksın."
+ },
+ {
+  "id": 167,
+  "vakit": "ogle",
+  "baslik": "ÖĞLEN KENDİNE SÖZ VER",
+  "tema": "deniz",
+  "soz": "Yorgun olsan da bir adım daha atacaksın."
+ },
+ {
+  "id": 168,
+  "vakit": "aksam",
+  "baslik": "BU GECE KENDİNE SÖZ VER",
+  "tema": "gunbatimi",
+  "soz": "Yarın güne sevdiğin bir şeyle başlayacaksın."
+ },
+ {
+  "id": 169,
+  "vakit": "sabah",
+  "baslik": "BUGÜN KENDİNE SÖZ VER",
+  "tema": "gundogumu",
+  "soz": "Başladığın bir işi yarım bırakmayacaksın."
+ },
+ {
+  "id": 170,
+  "vakit": "ogle",
+  "baslik": "ÖĞLEN KENDİNE SÖZ VER",
+  "tema": "orman",
+  "soz": "Öğleden sonra kendine karşı nazik olacaksın."
+ },
+ {
+  "id": 171,
+  "vakit": "aksam",
+  "baslik": "BU GECE KENDİNE SÖZ VER",
+  "tema": "yildiz",
+  "soz": "Özlediğin birine bir mesaj atacaksın."
+ },
+ {
+  "id": 172,
+  "vakit": "sabah",
+  "baslik": "BUGÜN KENDİNE SÖZ VER",
+  "tema": "yol",
+  "soz": "Kendinle gurur duyacağın tek bir şey yapacaksın."
+ },
+ {
+  "id": 173,
+  "vakit": "ogle",
+  "baslik": "ÖĞLEN KENDİNE SÖZ VER",
+  "tema": "yol",
+  "soz": "Aldığın her nefesin bir yeniden başlangıç olduğunu hatırlayacaksın."
+ },
+ {
+  "id": 174,
+  "vakit": "aksam",
+  "baslik": "BU GECE KENDİNE SÖZ VER",
+  "tema": "yagmur",
+  "soz": "İlerlemenin düz bir çizgi olmadığını kabul edeceksin."
+ },
+ {
+  "id": 175,
+  "vakit": "sabah",
+  "baslik": "BUGÜN KENDİNE SÖZ VER",
+  "tema": "dag",
+  "soz": "Kimsenin onayını beklemeden başlayacaksın."
+ },
+ {
+  "id": 176,
+  "vakit": "ogle",
+  "baslik": "ÖĞLEN KENDİNE SÖZ VER",
+  "tema": "sehir",
+  "soz": "Başkasının kötü gününü kendi gününe dönüştürmeyeceksin."
+ },
+ {
+  "id": 177,
+  "vakit": "aksam",
+  "baslik": "BU GECE KENDİNE SÖZ VER",
+  "tema": "deniz",
+  "soz": "Kendinden vazgeçmeyeceksin. Asla."
+ },
+ {
+  "id": 178,
+  "vakit": "sabah",
+  "baslik": "BUGÜN KENDİNE SÖZ VER",
+  "tema": "sehir",
+  "soz": "Dünden biraz daha iyi olacaksın. Sadece biraz."
+ },
+ {
+  "id": 179,
+  "vakit": "ogle",
+  "baslik": "ÖĞLEN KENDİNE SÖZ VER",
+  "tema": "dag",
+  "soz": "Günün ikinci yarısını, ilkinden daha iyi yaşayacaksın."
+ },
+ {
+  "id": 180,
+  "vakit": "aksam",
+  "baslik": "BU GECE KENDİNE SÖZ VER",
+  "tema": "sehir",
+  "soz": "Huzurla uyuyacaksın. Yarın yeni bir sayfa."
+ }
+]
