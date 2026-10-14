@@ -6,7 +6,7 @@ Kullanım:
   .venv/bin/python uret.py --adet 20
   .venv/bin/python uret.py --id 17      # tek bir sözü (yeniden) üret
 """
-import argparse, json, math, random, subprocess, tempfile, wave
+import argparse, json, math, random, shutil, subprocess, tempfile, wave
 from pathlib import Path
 
 import numpy as np
@@ -106,7 +106,7 @@ def aralikli(ciz, xy, metin, font, fill, aralik):
 
 def metin_png(oge, yol):
     soz = oge["soz"]
-    img = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    img = karartma_img()
     ciz = ImageDraw.Draw(img)
     for boyut in range(88, 50, -4):
         font = ImageFont.truetype(CFG["font"], boyut)
@@ -145,16 +145,15 @@ def metin_png(oge, yol):
 
 def cta_png(oge, yol, y_alt):
     """Son saniyelerde beliren paylaşım çağrısı."""
-    img = Image.new("RGBA", (W, H), (0, 0, 0, 0))
-    ciz = ImageDraw.Draw(img)
     metin = VIDEO_CTA[oge["id"] % len(VIDEO_CTA)]
     font = ImageFont.truetype(CFG["font_alt"], 40)
-    gen = ciz.textlength(metin, font=font)
-    y = y_alt + 70
-    ciz.rounded_rectangle([(W - gen) / 2 - 34, y - 18, (W + gen) / 2 + 34, y + 62], radius=40,
-                          fill=(255, 226, 160, 235))
-    ciz.text((W / 2, y + 22), metin, font=font, fill=(30, 20, 40, 255), anchor="mm")
+    gen = int(ImageDraw.Draw(Image.new("RGBA", (1, 1))).textlength(metin, font=font)) + 68
+    img = Image.new("RGBA", (gen, 80), (0, 0, 0, 0))
+    ciz = ImageDraw.Draw(img)
+    ciz.rounded_rectangle([0, 0, gen - 1, 79], radius=40, fill=(255, 226, 160, 235))
+    ciz.text((gen / 2, 40), metin, font=font, fill=(30, 20, 40, 255), anchor="mm")
     img.save(yol)
+    return (W - gen) // 2, y_alt + 52
 
 
 # ---------- müzik ----------
@@ -219,13 +218,13 @@ def gradyan_png(tema, yol):
     Image.fromarray(dizi).save(yol)
 
 
-def karartma_png(yol):
-    """Yazının durduğu orta bölgeyi yumuşakça koyulaştıran sabit katman (hareketli arka planda okunurluk)."""
+def karartma_img():
+    """Yazının durduğu orta bölgeyi yumuşakça koyulaştıran katman (hareketli arka planda okunurluk)."""
     y = np.arange(H)[:, None]
     alfa = 0.15 + 0.45 * np.exp(-(((y - (H / 2 - 120)) / 520) ** 2))
     dizi = np.zeros((H, W, 4), np.uint8)
     dizi[..., 3] = np.broadcast_to((alfa * 255).astype(np.uint8), (H, W))
-    Image.fromarray(dizi, "RGBA").save(yol)
+    return Image.fromarray(dizi, "RGBA")
 
 
 # ---------- birleştirme ----------
@@ -235,7 +234,7 @@ def uret(oge, hedef):
         png = Path(g) / "metin.png"
         y_alt = metin_png(oge, png)
         cp = Path(g) / "cta.png"
-        cta_png(oge, cp, y_alt)
+        cx, cy = cta_png(oge, cp, y_alt)
         muzik = muzik_sec(oge, sn, g)
         bg = arkaplan_sec(oge)
         if bg:
@@ -247,22 +246,21 @@ def uret(oge, hedef):
             gradyan_png(oge["tema"], gp)
             girdi = ["-loop", "1", "-framerate", str(FPS), "-i", str(gp)]
             vf = f"[0:v]crop={W}:{H}:0:'600*t/{sn}'[bg]"
-        kp = Path(g) / "karartma.png"
-        karartma_png(kp)
         # yazı hızlı belirir (ilk saniye kaydırmayı durdurmalı); çağrı son 3 saniyede gelir
         filtre = (vf + f";[1:v]format=rgba,fade=t=in:st=0.1:d=0.5:alpha=1[t];"
-                  f"[4:v]format=rgba,fade=t=in:st={sn - 3}:d=0.5:alpha=1[c];"
-                  f"[bg][3:v]overlay=0:0[bgk];[bgk][t]overlay=0:0[bgt];[bgt][c]overlay=0:0,format=yuv420p[v];"
-                  f"[2:a]atrim=0:{sn},afade=t=in:d=0.8,afade=t=out:st={sn - 1.2}:d=1.2[a]")
-        komut = [FFMPEG, "-y", "-loglevel", "error", *girdi,
+                  f"[3:v]format=rgba,fade=t=in:st={sn - 3}:d=0.5:alpha=1[c];"
+                  f"[bg][t]overlay=0:0[bgt];[bgt][c]overlay={cx}:{cy},format=yuv420p[v];"
+                  f"[2:a]atrim=0:{sn},afade=t=in:d=0.8,afade=t=out:st={sn - 1.2}:d=1.2,loudnorm=I=-14:TP=-1.5:LRA=11[a]")
+        komut = [FFMPEG, "-y", "-loglevel", "error", "-threads", "2", "-filter_complex_threads", "2", *girdi,
                  "-loop", "1", "-framerate", str(FPS), "-i", str(png),
                  "-stream_loop", "-1", "-i", str(muzik),
-                 "-loop", "1", "-framerate", str(FPS), "-i", str(kp),
                  "-loop", "1", "-framerate", str(FPS), "-i", str(cp),
                  "-filter_complex", filtre, "-map", "[v]", "-map", "[a]", "-t", str(sn),
-                 "-c:v", "libx264", "-preset", "medium", "-crf", "21", "-maxrate", "2500k", "-bufsize", "5000k", "-r", str(FPS),
-                 "-c:a", "aac", "-b:a", "128k", "-ar", "44100", "-movflags", "+faststart", str(hedef)]
+                 "-c:v", "libx264", "-preset", "medium", "-x264-params", "rc-lookahead=10:threads=2", "-crf", "21", "-maxrate", "2500k", "-bufsize", "5000k", "-r", str(FPS),
+                 "-c:a", "aac", "-b:a", "128k", "-ar", "44100", "-movflags", "+faststart", str(Path(g) / "cikti.mp4")]
         subprocess.run(komut, check=True)
+        # yalnızca tamamlanmış video sıraya girer (yarım dosya asla kalmaz)
+        shutil.move(str(Path(g) / "cikti.mp4"), str(hedef))
     hedef.with_suffix(".txt").write_text(caption(oge))
 
 
