@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """sira/ klasöründeki sıradaki videoyu Instagram'a Reels olarak paylaşır → paylasildi/
 
-Video doğrudan yüklenir (resumable upload); herkese açık bir link gerekmez.
+Instagram videoyu bir linkten indirir; GitHub'da ci_paylas.py geçici imzalı release linki verir.
 Kullanım:
   .venv/bin/python paylas.py --kontrol      # anahtar + günlük limit kontrolü, paylaşım YOK
   .venv/bin/python paylas.py                # sıradaki videoyu paylaş
@@ -71,23 +71,19 @@ def siradaki(vakit):
     return None
 
 
-def paylas(cfg, mp4):
+def paylas(cfg, mp4, video_url, yayinla=True):
+    """video_url: Instagram'ın videoyu indireceği herkese açık (geçici olabilir) link.
+    Instagram Login API'si doğrudan yüklemeyi (resumable) kabul etmiyor; link şart."""
     t, uid = cfg["ig_access_token"], cfg["ig_user_id"]
     aciklama = mp4.with_suffix(".txt").read_text() if mp4.with_suffix(".txt").exists() else ""
 
-    # 1) kapsayıcı oluştur
+    # 1) kapsayıcı oluştur — Instagram videoyu bu andan itibaren linkten indirir
     kap = cevap(requests.post(f"{API}/{uid}/media", timeout=60, data={
-        "media_type": "REELS", "upload_type": "resumable", "caption": aciklama,
+        "media_type": "REELS", "video_url": video_url, "caption": aciklama,
         "share_to_feed": "true", "thumb_offset": "2000", "access_token": t}))
     kid = kap["id"]
-    yukle_url = kap.get("uri") or f"https://rupload.facebook.com/ig-api-upload/v23.0/{kid}"
 
-    # 2) videoyu doğrudan yükle
-    veri = mp4.read_bytes()
-    cevap(requests.post(yukle_url, data=veri, timeout=300, headers={
-        "Authorization": f"OAuth {t}", "offset": "0", "file_size": str(len(veri))}))
-
-    # 3) Instagram'ın videoyu işlemesini bekle
+    # 2) Instagram'ın videoyu işlemesini bekle
     for _ in range(60):
         durum = cevap(requests.get(f"{API}/{kid}", params={"fields": "status_code,status", "access_token": t},
                                    timeout=30))
@@ -98,14 +94,17 @@ def paylas(cfg, mp4):
         time.sleep(10)
     else:
         raise RuntimeError("Video 10 dakikada işlenmedi.")
+    if not yayinla:
+        print(f"Deneme başarılı ✓ Instagram {mp4.name} videosunu indirip işledi (YAYINLANMADI).")
+        return None
 
-    # 4) yayınla
+    # 3) yayınla
     yayin = cevap(requests.post(f"{API}/{uid}/media_publish", data={"creation_id": kid, "access_token": t},
                                 timeout=60))
     link = cevap(requests.get(f"{API}/{yayin['id']}", params={"fields": "permalink", "access_token": t},
                               timeout=30)).get("permalink", "")
 
-    # 5) arşivle + kayıt
+    # 4) arşivle + kayıt
     hedef = KOK / "paylasildi"
     hedef.mkdir(exist_ok=True)
     for p in (mp4, mp4.with_suffix(".txt")):
@@ -124,6 +123,8 @@ def main():
     ap.add_argument("--yenile", action="store_true")
     ap.add_argument("--vakit", choices=["sabah", "ogle", "aksam"])
     ap.add_argument("--dosya")
+    ap.add_argument("--url", help="videonun herkese açık linki (Instagram buradan indirir)")
+    ap.add_argument("--dene", action="store_true", help="işlet ama yayınlama")
     a = ap.parse_args()
     cfg = ayar()
     if a.kontrol:
@@ -133,7 +134,9 @@ def main():
     mp4 = Path(a.dosya) if a.dosya else siradaki(a.vakit)
     if not mp4 or not mp4.exists():
         sys.exit("Sırada video yok. Önce: .venv/bin/python uret.py --adet 30")
-    paylas(cfg, mp4)
+    if not a.url:
+        sys.exit("Instagram videoyu bir linkten indiriyor: --url gerekli (otomatik paylaşım GitHub'da ci_paylas.py ile).")
+    paylas(cfg, mp4, a.url, yayinla=not a.dene)
 
 
 if __name__ == "__main__":

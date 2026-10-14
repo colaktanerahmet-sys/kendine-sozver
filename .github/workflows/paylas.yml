@@ -14,6 +14,10 @@ on:
         type: choice
         options: [sabah, ogle, aksam, yenile]
         default: sabah
+      dene:
+        description: "Sadece dene (Instagram videoyu işler ama YAYINLAMAZ)"
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -60,7 +64,7 @@ jobs:
           ENC_KEY: ${{ secrets.ENC_KEY }}
           IG_USER_ID: ${{ vars.IG_USER_ID }}
           GH_TOKEN: ${{ github.token }}
-        run: python ci_paylas.py "${{ steps.v.outputs.vakit }}"
+        run: python ci_paylas.py "${{ steps.v.outputs.vakit }}" ${{ inputs.dene && '--dene' || '' }}
 
       - name: Durumu kaydet
         if: always()

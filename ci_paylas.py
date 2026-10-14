@@ -10,6 +10,8 @@ Anahtar depoda yalnızca ENC_KEY secret'ı ile şifrelenmiş olarak durur.
 import json, os, subprocess, sys
 from pathlib import Path
 
+import requests
+
 os.environ.setdefault("PAYLASIM_KAYDI", str(Path(__file__).resolve().parent / "durum" / "paylasim_kaydi.csv"))
 import paylas  # noqa: E402
 
@@ -55,8 +57,20 @@ def main():
     hedef = KOK / "sira"
     hedef.mkdir(exist_ok=True)
     ad = adaylar[0]
-    gh("release", "download", RELEASE, "-p", ad, "-p", ad.replace(".mp4", ".txt"), "-D", str(hedef), "--clobber")
-    paylas.paylas(cfg, hedef / ad)
+    gh("release", "download", RELEASE, "-p", ad.replace(".mp4", ".txt"), "-D", str(hedef), "--clobber")
+    paylas.paylas(cfg, hedef / ad, imzali_link(ad), yayinla="--dene" not in sys.argv)
+
+
+def imzali_link(ad):
+    """Gizli depodaki release dosyası için GitHub'ın verdiği birkaç dakikalık imzalı indirme linki.
+    Depo gizli kalır; link kısa sürede kendiliğinden geçersizleşir."""
+    api_url = gh("release", "view", RELEASE, "--json", "assets",
+                 "-q", f'.assets[] | select(.name=="{ad}") | .apiUrl').strip()
+    r = requests.get(api_url, allow_redirects=False, timeout=30, headers={
+        "Authorization": f"Bearer {os.environ['GH_TOKEN']}", "Accept": "application/octet-stream"})
+    if r.status_code not in (301, 302, 303, 307) or "Location" not in r.headers:
+        raise RuntimeError(f"İmzalı link alınamadı ({r.status_code})")
+    return r.headers["Location"]
 
 
 if __name__ == "__main__":
