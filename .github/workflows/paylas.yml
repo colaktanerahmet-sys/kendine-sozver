@@ -3,9 +3,9 @@ name: paylas
 
 on:
   schedule:
-    - cron: "7 6 * * *"    # 09:07 TR  sabah
-    - cron: "7 10 * * *"   # 13:07 TR  öğle
-    - cron: "7 17 * * *"   # 20:07 TR  akşam
+    - cron: "55 5 * * *"   # 08:55 TR  sabah  (gecikmeyle ~09:00)
+    - cron: "55 9 * * *"   # 12:55 TR  öğle   (~13:00)
+    - cron: "55 16 * * *"  # 19:55 TR  akşam  (~20:00)
     - cron: "30 3 * * 1"   # Pazartesi 06:30 TR  anahtar yenileme
   workflow_dispatch:
     inputs:
@@ -39,9 +39,9 @@ jobs:
         id: v
         run: |
           case "${{ github.event.schedule }}" in
-            "7 6 * * *")  v=sabah ;;
-            "7 10 * * *") v=ogle ;;
-            "7 17 * * *") v=aksam ;;
+            "55 5 * * *")  v=sabah ;;
+            "55 9 * * *")  v=ogle ;;
+            "55 16 * * *") v=aksam ;;
             "30 3 * * 1") v=yenile ;;
             *)            v="${{ inputs.vakit }}" ;;
           esac
