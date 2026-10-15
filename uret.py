@@ -6,7 +6,7 @@ Kullanım:
   .venv/bin/python uret.py --adet 20
   .venv/bin/python uret.py --id 17      # tek bir sözü (yeniden) üret
 """
-import argparse, json, math, random, shutil, subprocess, tempfile, wave
+import argparse, asyncio, json, math, random, shutil, subprocess, tempfile, wave
 from pathlib import Path
 
 import numpy as np
@@ -156,6 +156,120 @@ def cta_png(oge, yol, y_alt):
     return (W - gen) // 2, y_alt + 52
 
 
+# ---------- seslendirme (izlenme süresini en çok artıran şey: ses + senkron yazı) ----------
+SES = "tr-TR-EmelNeural"
+SES_BASLIK = {"sabah": "Bugün kendine bir söz ver.", "ogle": "Öğlen kendine bir söz ver.",
+              "aksam": "Bu gece kendine bir söz ver."}
+SES_CTA = ["Bunu ihtiyacı olan birine gönder.", "Kaydet, zor bir anda tekrar bak.", "Söz veriyorsan, yoruma söz yaz."]
+
+
+def seslendir(metin, yol):
+    """Microsoft Edge nöral sesi ile okur → mp3 + kelime zamanları [(kelime, başlangıç, süre)]."""
+    import edge_tts
+
+    async def calis():
+        kelimeler = []
+        with open(yol, "wb") as f:
+            async for c in edge_tts.Communicate(metin, SES, rate="-4%", boundary="WordBoundary").stream():
+                if c["type"] == "audio":
+                    f.write(c["data"])
+                elif c["type"] == "WordBoundary":
+                    kelimeler.append((c["text"], c["offset"] / 1e7, c["duration"] / 1e7))
+        return kelimeler
+
+    for deneme in range(4):
+        try:
+            return asyncio.run(calis())
+        except Exception:
+            if deneme == 3:
+                raise
+            import time; time.sleep(3 * (deneme + 1))
+
+
+def ses_suresi(yol):
+    r = subprocess.run([FFMPEG, "-i", str(yol), "-f", "null", "-"], capture_output=True, text=True)
+    t = [x for x in r.stderr.split("time=")[1:]][-1].split()[0]
+    sa, dk, sn = t.split(":")
+    return int(sa) * 3600 + int(dk) * 60 + float(sn)
+
+
+def kelime_kareleri(oge, g, soz_zaman, t_soz):
+    """Sözün kelimeleri okunurken tek tek belirir, okunan kelime altın rengi.
+    Her kare tam ekran RGBA PNG; ffconcat ile süreleriyle sıralanır."""
+    soz = oge["soz"]
+    olcu = ImageDraw.Draw(Image.new("RGBA", (1, 1)))
+    for boyut in range(88, 50, -4):
+        font = ImageFont.truetype(CFG["font"], boyut)
+        satirlar = satirlara_bol(soz, font, W - 180, olcu)
+        if len(satirlar) <= 6:
+            break
+    satir_h = int(boyut * 1.35)
+    y0 = (H - satir_h * len(satirlar)) // 2 - 20
+    # kelime konumları (satır ortalı, düzen kareler arasında sabit → zıplama yok)
+    konum = []
+    bosluk = olcu.textlength(" ", font=font)
+    for i, s in enumerate(satirlar):
+        x = W / 2 - olcu.textlength(s, font=font) / 2
+        for k in s.split():
+            konum.append((k, x, y0 + i * satir_h))
+            x += olcu.textlength(k, font=font) + bosluk
+    n = len(konum)
+    # kelime başına başlangıç zamanı: TTS sınırları kelime sayısıyla uyuşmazsa eşit dağıt
+    if len(soz_zaman) == n:
+        basla = [t_soz + z[1] for z in soz_zaman]
+    else:
+        toplam = (soz_zaman[-1][1] + soz_zaman[-1][2]) if soz_zaman else 0.35 * n
+        basla = [t_soz + toplam * i / n for i in range(n)]
+
+    # söz ilk karede soluk görünür (kaydıran kişi anında okur), okundukça kelimeler parlar
+    taban = metin_png_taban(oge, satirlar, y0)
+    golge = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    gc = ImageDraw.Draw(golge)
+    for k_, x, y in konum:
+        gc.text((x, y + 4), k_, font=font, fill=(0, 0, 0, 200))
+    taban.alpha_composite(golge.filter(ImageFilter.GaussianBlur(10)))
+    altin, beyaz, soluk = (255, 226, 160, 255), (255, 255, 255, 255), (255, 255, 255, 105)
+    kareler = []
+    for k in range(n + 1):
+        img = taban.copy()
+        ciz = ImageDraw.Draw(img)
+        for j, (k_, x, y) in enumerate(konum):
+            renk = soluk if j >= k else (altin if j == k - 1 and k < n else beyaz)
+            ciz.text((x, y), k_, font=font, fill=renk)
+        yol = Path(g) / f"k{k:02d}.png"
+        img.save(yol)
+        kareler.append(yol)
+    zamanlar = [0.0] + basla
+    satir = ["ffconcat version 1.0"]
+    for k, yol in enumerate(kareler):
+        bitis = zamanlar[k + 1] if k + 1 < len(zamanlar) else None
+        satir.append(f"file '{yol}'")
+        if bitis is not None:
+            satir.append(f"duration {max(0.04, bitis - zamanlar[k]):.3f}")
+    satir.append(f"file '{kareler[-1]}'")  # son kare bitişe kadar kalsın
+    liste = Path(g) / "kareler.txt"
+    liste.write_text("\n".join(satir) + "\n")
+    return liste, y0 + satir_h * len(satirlar)
+
+
+def metin_png_taban(oge, satirlar, y0):
+    """Karartma + gün sayacı + başlık + sayfa adı (sözün kendisi hariç)."""
+    img = karartma_img()
+    ciz = ImageDraw.Draw(img)
+    baslik_font = ImageFont.truetype(CFG["font_alt"], 36)
+    yb = y0 - 130
+    golge = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    aralikli(ImageDraw.Draw(golge), (W / 2, yb + 3), oge["baslik"], baslik_font, (0, 0, 0, 220), 7)
+    img.alpha_composite(golge.filter(ImageFilter.GaussianBlur(10)))
+    gun_font = ImageFont.truetype(CFG["font_alt"], 30)
+    aralikli(ciz, (W / 2, yb - 60), f"GÜN {gun_no(oge)}", gun_font, (255, 255, 255, 170), 6)
+    aralikli(ciz, (W / 2, yb), oge["baslik"], baslik_font, (255, 226, 160, 255), 7)
+    ciz.line([(W / 2 - 40, yb + 70), (W / 2 + 40, yb + 70)], fill=(255, 226, 160, 200), width=3)
+    kucuk = ImageFont.truetype(CFG["font_alt"], 38)
+    ciz.text((W / 2, H - 520), CFG["sayfa_adi"], font=kucuk, fill=(255, 255, 255, 200), anchor="ma")
+    return img
+
+
 # ---------- müzik ----------
 def sentez_muzik(yol, sn, tohum):
     """Telif derdi olmayan, sakin bir ambient pad üretir."""
@@ -229,6 +343,65 @@ def karartma_img():
 
 # ---------- birleştirme ----------
 def uret(oge, hedef):
+    if CFG.get("seslendirme", True):
+        return uret_sesli(oge, hedef)
+    return uret_sessiz(oge, hedef)
+
+
+def arkaplan_girdisi(oge, g, sn):
+    bg = arkaplan_sec(oge)
+    if bg:
+        return (["-stream_loop", "-1", "-i", str(bg)],
+                f"[0:v]scale={W}:{H}:force_original_aspect_ratio=increase,crop={W}:{H},"
+                f"fps={FPS},eq=brightness=-0.12:saturation=0.85[bg]")
+    gp = Path(g) / "grad.png"
+    gradyan_png(oge["tema"], gp)
+    return ["-loop", "1", "-framerate", str(FPS), "-i", str(gp)], f"[0:v]crop={W}:{H}:0:'600*t/{sn}'[bg]"
+
+
+def uret_sesli(oge, hedef):
+    with tempfile.TemporaryDirectory() as g:
+        g = Path(g)
+        cta_i = oge["id"] % len(VIDEO_CTA)
+        seslendir(SES_BASLIK[oge["vakit"]], g / "s1.mp3")
+        soz_zaman = seslendir(oge["soz"], g / "s2.mp3")
+        seslendir(SES_CTA[cta_i], g / "s3.mp3")
+        d1, d2, d3 = (ses_suresi(g / f"s{i}.mp3") for i in (1, 2, 3))
+        t_soz = 0.15 + d1 + 0.3
+        t_cta = t_soz + d2 + 0.7
+        sn = round(t_cta + d3 + 0.9, 2)
+
+        liste, y_alt = kelime_kareleri(oge, g, soz_zaman, t_soz)
+        cp = g / "cta.png"
+        cx, cy = cta_png(oge, cp, y_alt)
+        muzik = muzik_sec(oge, sn, g)
+        girdi, vf = arkaplan_girdisi(oge, g, sn)
+        ms = lambda t: int(t * 1000)
+        filtre = (vf + ";[1:v]fps=30,format=rgba[t];"
+                  f"[3:v]format=rgba,fade=t=in:st={t_cta - 0.1:.2f}:d=0.4:alpha=1[c];"
+                  "[bg][t]overlay=0:0[bgt];[bgt][c]overlay=" f"{cx}:{cy},format=yuv420p[v];"
+                  # ses: başlık / söz / çağrı doğru anlara; müzik sesin altında kısık
+                  f"[4:a]adelay={ms(0.15)}|{ms(0.15)}[a1];[5:a]adelay={ms(t_soz)}|{ms(t_soz)}[a2];"
+                  f"[6:a]adelay={ms(t_cta)}|{ms(t_cta)}[a3];"
+                  "[a1][a2][a3]amix=inputs=3:normalize=0,volume=1.6[ses];"
+                  f"[2:a]atrim=0:{sn},volume=0.22,afade=t=in:d=0.6,afade=t=out:st={sn - 1.0}:d=1.0[m];"
+                  f"[ses][m]amix=inputs=2:normalize=0:duration=longest,atrim=0:{sn},"
+                  "loudnorm=I=-14:TP=-1.5:LRA=11[a]")
+        komut = [FFMPEG, "-y", "-loglevel", "error", "-threads", "2", "-filter_complex_threads", "2", *girdi,
+                 "-f", "concat", "-safe", "0", "-i", str(liste),
+                 "-stream_loop", "-1", "-i", str(muzik),
+                 "-loop", "1", "-framerate", str(FPS), "-i", str(cp),
+                 "-i", str(g / "s1.mp3"), "-i", str(g / "s2.mp3"), "-i", str(g / "s3.mp3"),
+                 "-filter_complex", filtre, "-map", "[v]", "-map", "[a]", "-t", str(sn),
+                 "-c:v", "libx264", "-preset", "medium", "-x264-params", "rc-lookahead=10:threads=2", "-crf", "21",
+                 "-maxrate", "2500k", "-bufsize", "5000k", "-r", str(FPS),
+                 "-c:a", "aac", "-b:a", "128k", "-ar", "44100", "-movflags", "+faststart", str(g / "cikti.mp4")]
+        subprocess.run(komut, check=True)
+        shutil.move(str(g / "cikti.mp4"), str(hedef))
+    hedef.with_suffix(".txt").write_text(caption(oge))
+
+
+def uret_sessiz(oge, hedef):
     sn = sure(oge["soz"])
     with tempfile.TemporaryDirectory() as g:
         png = Path(g) / "metin.png"
