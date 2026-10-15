@@ -95,6 +95,32 @@ def hikaye(cfg, video_url):
     print(f"Hikâye paylaşıldı ✓ {yayin['id']}")
 
 
+def karusel(cfg, ad, aciklama, gorsel_linkleri, yayinla=True):
+    """Kaydırmalı gönderi: her görsel için bir alt kapsayıcı, sonra CAROUSEL kapsayıcısı."""
+    t, uid = cfg["ig_access_token"], cfg["ig_user_id"]
+    cocuklar = []
+    for link in gorsel_linkleri:
+        cocuklar.append(cevap(requests.post(f"{API}/{uid}/media", timeout=60, data={
+            "image_url": link, "is_carousel_item": "true", "access_token": t}))["id"])
+    for c in cocuklar:
+        bekle(cfg, c)
+    kid = cevap(requests.post(f"{API}/{uid}/media", timeout=60, data={
+        "media_type": "CAROUSEL", "children": ",".join(cocuklar), "caption": aciklama, "access_token": t}))["id"]
+    bekle(cfg, kid)
+    if not yayinla:
+        print(f"Deneme başarılı ✓ {ad} ({len(cocuklar)} görsel) işlendi (YAYINLANMADI).")
+        return None
+    yayin = cevap(requests.post(f"{API}/{uid}/media_publish", data={"creation_id": kid, "access_token": t},
+                                timeout=60))
+    link = cevap(requests.get(f"{API}/{yayin['id']}", params={"fields": "permalink", "access_token": t},
+                              timeout=30)).get("permalink", "")
+    KAYIT.parent.mkdir(parents=True, exist_ok=True)
+    with open(KAYIT, "a") as f:
+        f.write(f"{datetime.datetime.now(datetime.timezone.utc).isoformat(timespec='seconds')},{ad},{yayin['id']},{link}\n")
+    print(f"Karusel paylaşıldı ✓ {ad} → {link}")
+    return link
+
+
 def paylas(cfg, mp4, video_url, yayinla=True):
     """video_url: Instagram'ın videoyu indireceği herkese açık (geçici olabilir) link.
     Instagram Login API'si doğrudan yüklemeyi (resumable) kabul etmiyor; link şart."""

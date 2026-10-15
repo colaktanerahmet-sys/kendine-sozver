@@ -3,6 +3,9 @@
 
   python ci_paylas.py oto                → TR saatine göre şu anki vakit henüz paylaşılmadıysa paylaş
   python ci_paylas.py sabah|ogle|aksam   → o vakte ait sıradaki videoyu paylaş
+  python ci_paylas.py karusel            → sıradaki kaydırmalı gönderiyi paylaş
+  python ci_paylas.py yorum              → yalnızca yorumlara yanıt ver
+  ('oto' da vakti gelen karuseli paylaşır ve her çalışmada yorumlara yanıt verir; --dene: yayınlamadan dene)
   python ci_paylas.py yenile             → Instagram anahtarını yenile, şifreli olarak durum/token.enc'e yaz
 
 Hangi videoların paylaşıldığı durum/paylasim_kaydi.csv'de tutulur (workflow bunu commit'ler).
@@ -23,6 +26,8 @@ TR = datetime.timezone(datetime.timedelta(hours=3))  # Türkiye'de yaz saati yok
 # Vakit başlangıçları (TR). GitHub zamanlayıcısı gecikip atlayabildiği için workflow
 # saatte bir çalışır; 'oto' o anki vakit bugün paylaşılmadıysa paylaşır.
 VAKITLER = [("sabah", 8, 45), ("ogle", 12, 45), ("aksam", 19, 45)]
+# Kaydırmalı gönderi: salı, perşembe, cumartesi 16:45 TR'den itibaren ('karusel' release'i)
+KARUSEL, KARUSEL_GUNLER, KARUSEL_SAAT = "karusel", {1, 3, 5}, (16, 45)
 
 
 def gh(*args):
@@ -54,6 +59,16 @@ def kayit_satirlari():
     return satirlar
 
 
+def bugun_paylasildi_mi(kosul):
+    bugun = datetime.datetime.now(TR).date()
+    return any(zaman.date() == bugun and kosul(dosya) for zaman, dosya in kayit_satirlari())
+
+
+def vakit_of(icerik, dosya):
+    no = dosya.split("_")[0]
+    return icerik.get(int(no), {}).get("vakit") if no.isdigit() else None
+
+
 def oto_vakit(icerik):
     """Şu an hangi vakit paylaşılmalı? Bugün paylaşılmışsa ya da vakit gelmediyse None."""
     simdi = datetime.datetime.now(TR)
@@ -61,45 +76,29 @@ def oto_vakit(icerik):
     for ad, sa, dk in VAKITLER:
         if (simdi.hour, simdi.minute) >= (sa, dk):
             vakit = ad
-    if vakit is None:
+    if vakit is None or bugun_paylasildi_mi(lambda d: vakit_of(icerik, d) == vakit):
         return None
-    for zaman, dosya in kayit_satirlari():
-        if zaman.date() == simdi.date() and icerik.get(int(dosya.split("_")[0]), {}).get("vakit") == vakit:
-            return None
     return vakit
 
 
-def main():
-    vakit = sys.argv[1]
-    cfg = paylas.ayar()
-    icerik = {o["id"]: o for o in json.loads((KOK / "icerik.json").read_text())}
+def karusel_zamani():
+    simdi = datetime.datetime.now(TR)
+    return (simdi.weekday() in KARUSEL_GUNLER and (simdi.hour, simdi.minute) >= KARUSEL_SAAT
+            and not bugun_paylasildi_mi(lambda d: d.startswith("K")))
 
-    if vakit == "oto":
-        vakit = oto_vakit(icerik)
-        if vakit is None:
-            print("Şu an paylaşılacak bir şey yok (vakit gelmedi ya da bugün zaten paylaşıldı).")
-            return
-        print(f"Otomatik vakit: {vakit}")
 
-    if vakit == "yenile":
-        yeni, gun = paylas.yenile(cfg)
-        sifrele(yeni)
-        return
-
+def reels_paylas(cfg, icerik, vakit, yayinla):
     varliklar = sorted(gh("release", "view", RELEASE, "--json", "assets", "-q", ".assets[].name").split())
     yapilmis = paylasilanlar()
-    adaylar = [a for a in varliklar if a.endswith(".mp4") and a not in yapilmis
-               and icerik.get(int(a.split("_")[0]), {}).get("vakit") == vakit]
+    adaylar = [a for a in varliklar if a.endswith(".mp4") and a not in yapilmis and vakit_of(icerik, a) == vakit]
     if not adaylar:
-        sys.exit(f"'{vakit}' için sırada video kalmadı! Yeni içerik üretip release'e yükle.")
+        raise RuntimeError(f"'{vakit}' için sırada video kalmadı! Yeni içerik üretip release'e yükle.")
     if len(adaylar) <= 7:
         print(f"::warning::'{vakit}' için sadece {len(adaylar)} video kaldı, yakında yeni içerik gerekecek.")
-
     hedef = KOK / "sira"
     hedef.mkdir(exist_ok=True)
     ad = adaylar[0]
     gh("release", "download", RELEASE, "-p", ad.replace(".mp4", ".txt"), "-D", str(hedef), "--clobber")
-    yayinla = "--dene" not in sys.argv
     paylas.paylas(cfg, hedef / ad, imzali_link(ad), yayinla=yayinla)
     if yayinla:
         try:  # hikâye olmazsa Reels yine paylaşılmış olur, iş başarısız sayılmaz
@@ -108,10 +107,67 @@ def main():
             print(f"::warning::Hikâye paylaşılamadı: {e}")
 
 
-def imzali_link(ad):
+def karusel_paylas(cfg, yayinla):
+    varliklar = gh("release", "view", KARUSEL, "--json", "assets", "-q", ".assets[].name").split()
+    yapilmis = paylasilanlar()
+    adaylar = sorted({a.split("_")[0].split(".")[0] for a in varliklar} - yapilmis)
+    if not adaylar:
+        raise RuntimeError("Sırada kaydırmalı gönderi kalmadı! karusel.json'a ekleyip karusel.py ile üret.")
+    if len(adaylar) <= 3:
+        print(f"::warning::Sadece {len(adaylar)} kaydırmalı gönderi kaldı.")
+    ad = adaylar[0]
+    gorseller = sorted((a for a in varliklar if a.startswith(ad + "_") and a.endswith(".jpg")),
+                       key=lambda a: int(a.rsplit("_", 1)[1].split(".")[0]))
+    hedef = KOK / "karusel"
+    hedef.mkdir(exist_ok=True)
+    gh("release", "download", KARUSEL, "-p", f"{ad}.txt", "-D", str(hedef), "--clobber")
+    aciklama = (hedef / f"{ad}.txt").read_text()
+    paylas.karusel(cfg, ad, aciklama, [imzali_link(g, KARUSEL) for g in gorseller], yayinla=yayinla)
+
+
+def main():
+    is_ = sys.argv[1]
+    yayinla = "--dene" not in sys.argv
+    cfg = paylas.ayar()
+    icerik = {o["id"]: o for o in json.loads((KOK / "icerik.json").read_text())}
+
+    if is_ == "yenile":
+        yeni, gun = paylas.yenile(cfg)
+        sifrele(yeni)
+        return
+
+    hata = False
+    if is_ in ("sabah", "ogle", "aksam"):
+        reels_paylas(cfg, icerik, is_, yayinla)
+    elif is_ == "karusel":
+        karusel_paylas(cfg, yayinla)
+    elif is_ == "oto":
+        # her iş ayrı: biri hata verirse diğerleri yine çalışsın
+        vakit = oto_vakit(icerik)
+        for ad, kosul, is_fn in [(f"Reels ({vakit})", vakit, lambda: reels_paylas(cfg, icerik, vakit, yayinla)),
+                                 ("Karusel", karusel_zamani(), lambda: karusel_paylas(cfg, yayinla))]:
+            if not kosul:
+                continue
+            print(f"→ {ad}")
+            try:
+                is_fn()
+            except Exception as e:
+                print(f"::error::{ad} paylaşılamadı: {e}")
+                hata = True
+    if is_ in ("oto", "yorum"):
+        try:
+            import yorum
+            yorum.yanitla(cfg, gonder=yayinla)
+        except Exception as e:
+            print(f"::warning::Yorumlar yanıtlanamadı: {e}")
+    if hata:
+        sys.exit(1)
+
+
+def imzali_link(ad, release=RELEASE):
     """Gizli depodaki release dosyası için GitHub'ın verdiği birkaç dakikalık imzalı indirme linki.
     Depo gizli kalır; link kısa sürede kendiliğinden geçersizleşir."""
-    api_url = gh("release", "view", RELEASE, "--json", "assets",
+    api_url = gh("release", "view", release, "--json", "assets",
                  "-q", f'.assets[] | select(.name=="{ad}") | .apiUrl').strip()
     r = requests.get(api_url, allow_redirects=False, timeout=30, headers={
         "Authorization": f"Bearer {os.environ['GH_TOKEN']}", "Accept": "application/octet-stream"})

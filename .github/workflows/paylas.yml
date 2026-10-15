@@ -13,7 +13,7 @@ on:
       vakit:
         description: "Elle çalıştır"
         type: choice
-        options: [oto, sabah, ogle, aksam, yenile]
+        options: [oto, sabah, ogle, aksam, karusel, yorum, yenile]
         default: oto
       dene:
         description: "Sadece dene (Instagram videoyu işler ama YAYINLAMAZ)"
