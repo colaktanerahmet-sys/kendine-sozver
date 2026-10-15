@@ -343,7 +343,7 @@ def karartma_img():
 
 # ---------- birleştirme ----------
 def uret(oge, hedef):
-    if CFG.get("seslendirme", True):
+    if CFG.get("seslendirme", False):  # config.json "seslendirme": true ile açılır
         return uret_sesli(oge, hedef)
     return uret_sessiz(oge, hedef)
 
