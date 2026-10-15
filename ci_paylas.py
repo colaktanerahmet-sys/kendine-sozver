@@ -25,7 +25,7 @@ TOKEN_ENC = KOK / "durum" / "token.enc"
 RELEASE = "sira"
 TR = datetime.timezone(datetime.timedelta(hours=3))  # Türkiye'de yaz saati yok
 # Vakit başlangıçları (TR). GitHub zamanlayıcısı gecikip atlayabildiği için workflow
-# saatte bir çalışır; 'oto' o anki vakit bugün paylaşılmadıysa paylaşır.
+# 10 dakikada bir çalışır; 'oto' o anki vakit bugün paylaşılmadıysa paylaşır.
 VAKITLER = [("sabah", 8, 45), ("ogle", 12, 45), ("aksam", 19, 45)]
 # Kaydırmalı gönderi: salı, perşembe, cumartesi 16:45 TR'den itibaren ('karusel' release'i)
 KARUSEL, KARUSEL_GUNLER, KARUSEL_SAAT = "karusel", {1, 3, 5}, (16, 45)
@@ -163,7 +163,8 @@ def main():
             except Exception as e:
                 print(f"::error::{ad} paylaşılamadı: {e}")
                 hata = True
-    if is_ in ("oto", "yorum"):
+    # yorumlara yarım saatte bir bak (Meta'yı gereksiz istekle yormamak için)
+    if is_ == "yorum" or (is_ == "oto" and datetime.datetime.now(TR).minute % 30 < 10):
         try:
             import yorum
             yorum.yanitla(cfg, gonder=yayinla)

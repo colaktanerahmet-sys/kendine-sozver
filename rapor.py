@@ -234,8 +234,7 @@ def notion_bloklari(md):
 def notiona_gonder(baslik, govde):
     token, sayfa = os.environ.get("NOTION_TOKEN"), os.environ.get("NOTION_PAGE_ID")
     if not token or not sayfa:
-        print("Notion anahtarı tanımlı değil, Notion'a gönderilmedi.")
-        return
+        raise RuntimeError("NOTION_TOKEN / NOTION_PAGE_ID tanımlı değil")
     r = requests.post("https://api.notion.com/v1/pages", timeout=60, headers={
         "Authorization": f"Bearer {token}", "Notion-Version": "2022-06-28"}, json={
         "parent": {"page_id": sayfa}, "icon": {"type": "emoji", "emoji": "📊"},
@@ -254,8 +253,10 @@ def main(cfg, gonder=True):
         return
     try:
         notiona_gonder(baslik, govde)
+        return
     except Exception as e:
-        print(f"::warning::Notion'a gönderilemedi: {e}")
+        print(f"::warning::Notion'a gönderilemedi, GitHub Issue olarak açılıyor: {e}")
+    # yedek: depo herkese açık olduğundan yalnızca Notion çalışmazsa
     subprocess.run(["gh", "issue", "create", "--title", baslik, "--body", govde, "--label", "rapor"], check=True)
     print("Rapor GitHub Issue olarak açıldı ✓")
 

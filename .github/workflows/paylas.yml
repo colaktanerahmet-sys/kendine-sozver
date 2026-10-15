@@ -3,10 +3,10 @@ name: paylas
 
 on:
   schedule:
-    # GitHub zamanlayıcısı gecikip bazı çalışmaları atlayabiliyor: 08:50–23:50 TR arası
-    # saatte bir bakılır, vakti gelmiş ve bugün paylaşılmamış olan paylaşılır
+    # GitHub zamanlayıcısı gecikip çalışmaları atlayabiliyor: 08:00–23:50 TR arası
+    # 10 dakikada bir bakılır (açık depo: Actions dakikası sınırsız), vakti gelmiş ve bugün paylaşılmamış olan paylaşılır
     # (sabah 08:45, öğle 12:45, akşam 19:45 TR'den itibaren — ci_paylas.py VAKITLER).
-    - cron: "50 5-20 * * *"
+    - cron: "*/10 5-20 * * *"
     - cron: "30 3 * * 1"   # Pazartesi 06:30 TR  anahtar yenileme + haftalık rapor
   workflow_dispatch:
     inputs:
@@ -45,7 +45,7 @@ jobs:
         id: v
         run: |
           case "${{ github.event.schedule }}" in
-            "50 5-20 * * *")    v=oto ;;
+            "*/10 5-20 * * *")  v=oto ;;
             "30 3 * * 1")       v=yenile ;;
             *)            v="${{ inputs.vakit }}" ;;
           esac
