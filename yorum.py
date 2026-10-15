@@ -44,6 +44,33 @@ GENEL = ["Yorumun için teşekkürler @{u} 💛 Kendine verdiğin sözleri unutm
 ATLA = re.compile(r"https?://|www\.|\bdm\b|promo|reklam|takip(e)? ?(et|geri)|f4f|l4l|collab|kazan[çc]", re.I)
 
 
+# Her yeni gönderiye hesabın kendisinden ilk yorum: yorum zincirini başlatan bir soru
+ILK_YORUM = {
+    "sabah": ["Bugün bu sözü tutacak mısın? Tutacaksan yoruma «söz» yaz 🤝👇",
+              "Sen bugün kendine hangi küçük sözü veriyorsun? 👇",
+              "1'den 10'a: bu söz bugün senin için ne kadar zor? 👇",
+              "Bu sözü birlikte tutacağın birini etiketle 👇"],
+    "ogle": ["Günün yarısı geçti, sabahki sözünü tuttun mu? ✅ / ⏳ 👇",
+             "Şu an en çok neye ihtiyacın var: mola mı, motivasyon mu? 👇",
+             "Öğle arası mı? Bugün seni en çok ne yordu, yaz biraz hafifle 👇",
+             "Bu hatırlatmaya ihtiyacı olan birini etiketle 👇"],
+    "aksam": ["Bugün kendine iyi davrandığın bir anı yaz 🤍👇",
+              "Bu gece kendine ne söylemek istersin? 👇",
+              "Bugün başardığın küçük bir şeyi yaz, kutlayalım 👏👇",
+              "Bunu bu gece duyması gereken birini etiketle 🤍👇"],
+    "karusel": ["Hangisi sana en çok iyi geldi? Numarasını yaz 👇",
+                "Bu listeye sen ne eklerdin? 👇",
+                "Hangisini bugün deneyeceksin? 1-5 arası yaz 👇"],
+}
+
+
+def ilk_yorum(cfg, medya_id, tur):
+    mesaj = random.Random(medya_id).choice(ILK_YORUM.get(tur, ILK_YORUM["karusel"]))
+    cevap(requests.post(f"{API}/{medya_id}/comments", data={"message": mesaj,
+                        "access_token": cfg["ig_access_token"]}, timeout=30))
+    print(f"İlk yorum yazıldı ✓ {mesaj}")
+
+
 def sec(metin, kid, u):
     r = random.Random(kid)
     m = metin.lower()

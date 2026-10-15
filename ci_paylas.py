@@ -27,8 +27,8 @@ TR = datetime.timezone(datetime.timedelta(hours=3))  # Türkiye'de yaz saati yok
 # Vakit başlangıçları (TR). GitHub zamanlayıcısı gecikip atlayabildiği için workflow
 # 10 dakikada bir çalışır; 'oto' o anki vakit bugün paylaşılmadıysa paylaşır.
 VAKITLER = [("sabah", 8, 45), ("ogle", 12, 45), ("aksam", 19, 45)]
-# Kaydırmalı gönderi: salı, perşembe, cumartesi 16:45 TR'den itibaren ('karusel' release'i)
-KARUSEL, KARUSEL_GUNLER, KARUSEL_SAAT = "karusel", {1, 3, 5}, (16, 45)
+# Kaydırmalı gönderi: her gün 16:45 TR'den itibaren ('karusel' release'i)
+KARUSEL, KARUSEL_GUNLER, KARUSEL_SAAT = "karusel", set(range(7)), (16, 45)
 
 
 def gh(*args):
@@ -88,6 +88,16 @@ def karusel_zamani():
             and not bugun_paylasildi_mi(lambda d: d.startswith("K")))
 
 
+def ilk_yorum_yaz(cfg, tur):
+    """Az önce paylaşılan gönderiye (kayıttaki son satır) hesabın kendisinden soru yorumu."""
+    try:
+        import yorum
+        medya_id = paylas.KAYIT.read_text().splitlines()[-1].split(",")[2]
+        yorum.ilk_yorum(cfg, medya_id, tur)
+    except Exception as e:
+        print(f"::warning::İlk yorum yazılamadı: {e}")
+
+
 def reels_paylas(cfg, icerik, vakit, yayinla):
     varliklar = sorted(gh("release", "view", RELEASE, "--json", "assets", "-q", ".assets[].name").split())
     yapilmis = paylasilanlar()
@@ -102,6 +112,7 @@ def reels_paylas(cfg, icerik, vakit, yayinla):
     gh("release", "download", RELEASE, "-p", ad.replace(".mp4", ".txt"), "-D", str(hedef), "--clobber")
     paylas.paylas(cfg, hedef / ad, imzali_link(ad), yayinla=yayinla)
     if yayinla:
+        ilk_yorum_yaz(cfg, vakit)
         try:  # hikâye olmazsa Reels yine paylaşılmış olur, iş başarısız sayılmaz
             paylas.hikaye(cfg, imzali_link(ad))
         except Exception as e:
@@ -124,6 +135,8 @@ def karusel_paylas(cfg, yayinla):
     gh("release", "download", KARUSEL, "-p", f"{ad}.txt", "-D", str(hedef), "--clobber")
     aciklama = (hedef / f"{ad}.txt").read_text()
     paylas.karusel(cfg, ad, aciklama, [imzali_link(g, KARUSEL) for g in gorseller], yayinla=yayinla)
+    if yayinla:
+        ilk_yorum_yaz(cfg, "karusel")
 
 
 def main():
