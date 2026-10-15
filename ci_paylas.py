@@ -4,6 +4,7 @@
   python ci_paylas.py oto                → TR saatine göre şu anki vakit henüz paylaşılmadıysa paylaş
   python ci_paylas.py sabah|ogle|aksam   → o vakte ait sıradaki videoyu paylaş
   python ci_paylas.py karusel            → sıradaki kaydırmalı gönderiyi paylaş
+  python ci_paylas.py rapor              → haftalık istatistik raporu (GitHub Issue)
   python ci_paylas.py yorum              → yalnızca yorumlara yanıt ver
   ('oto' da vakti gelen karuseli paylaşır ve her çalışmada yorumlara yanıt verir; --dene: yayınlamadan dene)
   python ci_paylas.py yenile             → Instagram anahtarını yenile, şifreli olarak durum/token.enc'e yaz
@@ -131,9 +132,17 @@ def main():
     cfg = paylas.ayar()
     icerik = {o["id"]: o for o in json.loads((KOK / "icerik.json").read_text())}
 
-    if is_ == "yenile":
-        yeni, gun = paylas.yenile(cfg)
-        sifrele(yeni)
+    if is_ in ("yenile", "rapor"):
+        if is_ == "yenile":
+            yeni, gun = paylas.yenile(cfg)
+            sifrele(yeni)
+        try:  # haftalık rapor; olmazsa anahtar yenileme yine başarılı sayılır
+            import rapor
+            rapor.main(cfg, gonder=yayinla)
+        except Exception as e:
+            print(f"::warning::Haftalık rapor çıkarılamadı: {e}")
+            if is_ == "rapor":
+                raise
         return
 
     hata = False

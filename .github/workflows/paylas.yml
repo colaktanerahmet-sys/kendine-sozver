@@ -7,13 +7,13 @@ on:
     # saatte bir bakılır, vakti gelmiş ve bugün paylaşılmamış olan paylaşılır
     # (sabah 08:45, öğle 12:45, akşam 19:45 TR'den itibaren — ci_paylas.py VAKITLER).
     - cron: "50 5-20 * * *"
-    - cron: "30 3 * * 1"   # Pazartesi 06:30 TR  anahtar yenileme
+    - cron: "30 3 * * 1"   # Pazartesi 06:30 TR  anahtar yenileme + haftalık rapor
   workflow_dispatch:
     inputs:
       vakit:
         description: "Elle çalıştır"
         type: choice
-        options: [oto, sabah, ogle, aksam, karusel, yorum, yenile]
+        options: [oto, sabah, ogle, aksam, karusel, yorum, rapor, yenile]
         default: oto
       dene:
         description: "Sadece dene (Instagram videoyu işler ama YAYINLAMAZ)"
@@ -22,6 +22,7 @@ on:
 
 permissions:
   contents: write
+  issues: write
 
 concurrency:
   group: paylas
