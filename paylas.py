@@ -130,7 +130,9 @@ def paylas(cfg, mp4, video_url, yayinla=True):
     # 1) kapsayıcı oluştur — Instagram videoyu bu andan itibaren linkten indirir
     kap = cevap(requests.post(f"{API}/{uid}/media", timeout=60, data={
         "media_type": "REELS", "video_url": video_url, "caption": aciklama,
-        "share_to_feed": "true", "thumb_offset": "2000", "access_token": t}))
+        "share_to_feed": "true", "thumb_offset": "2000", "access_token": t,
+        # özgün ses adı: başkaları bu sesi kendi videosunda kullanınca sayfaya geri bağlantı olur
+        "audio_name": "Kendine Söz Ver · huzur müziği"}))
     kid = kap["id"]
 
     # 2) Instagram'ın videoyu işlemesini bekle
