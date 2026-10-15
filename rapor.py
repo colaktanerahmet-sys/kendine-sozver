@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""Haftalık Instagram istatistik raporu → GitHub Issue (sahibine bildirim + e-posta gider).
+"""Haftalık Instagram istatistik raporu → Notion sayfası + GitHub Issue (bildirim + e-posta).
 
 Her pazartesi ci_paylas.py yenile adımından sonra çalışır; elle: ci_paylas.py rapor [--dene]
 Takipçi sayısı her hafta durum/istatistik.csv'ye yazılır, haftalık değişim buradan hesaplanır.
 """
-import datetime, json, os, subprocess, sys
+import datetime, json, os, re, subprocess, sys
 from collections import defaultdict
 from pathlib import Path
 
@@ -180,13 +180,84 @@ def rapor(cfg):
     return f"📊 Haftalık rapor {simdi:%d.%m.%Y} · {sayi(hesap['followers_count'])} takipçi", "\n".join(L)
 
 
+# ---------- Notion ----------
+def zengin(metin):
+    """**kalın** ve [yazı](link) içeren satırı Notion rich_text'e çevirir."""
+    metin = re.sub(r"</?sub>", "", metin)
+    parcalar = []
+    for m in re.finditer(r"\*\*(.+?)\*\*|\[(.+?)\]\((\S+?)\)|([^*\[]+|[*\[])", metin):
+        if m.group(1):
+            parcalar.append({"type": "text", "text": {"content": m.group(1)}, "annotations": {"bold": True}})
+        elif m.group(2):
+            parcalar.append({"type": "text", "text": {"content": m.group(2), "link": {"url": m.group(3)}}})
+        else:
+            parcalar.append({"type": "text", "text": {"content": m.group(4)}})
+    return parcalar
+
+
+def notion_bloklari(md):
+    bloklar, tablo = [], []
+
+    def tabloyu_bitir():
+        if tablo:
+            satirlar = [[c.strip() for c in t.strip("|").split("|")] for t in tablo if not re.fullmatch(r"[|\-\s]+", t)]
+            satirlar = [r for r in satirlar if any(r)]
+            if satirlar:
+                gen = max(len(r) for r in satirlar)
+                bloklar.append({"type": "table", "table": {
+                    "table_width": gen, "has_column_header": bool(satirlar[0][0]),
+                    "children": [{"type": "table_row", "table_row": {
+                        "cells": [zengin(c) for c in r + [""] * (gen - len(r))]}} for r in satirlar]}})
+            tablo.clear()
+
+    for satir in md.splitlines():
+        if satir.startswith("|"):
+            tablo.append(satir); continue
+        tabloyu_bitir()
+        if not satir.strip():
+            continue
+        if satir.startswith("## "):
+            continue  # başlık sayfa adında
+        if satir.startswith("### "):
+            bloklar.append({"type": "heading_2", "heading_2": {"rich_text": zengin(satir[4:])}})
+        elif satir.startswith("- "):
+            bloklar.append({"type": "bulleted_list_item", "bulleted_list_item": {"rich_text": zengin(satir[2:])}})
+        elif re.match(r"\d+\. ", satir):
+            bloklar.append({"type": "numbered_list_item",
+                            "numbered_list_item": {"rich_text": zengin(satir.split(". ", 1)[1])}})
+        else:
+            bloklar.append({"type": "paragraph", "paragraph": {"rich_text": zengin(satir.strip())}})
+    tabloyu_bitir()
+    return bloklar
+
+
+def notiona_gonder(baslik, govde):
+    token, sayfa = os.environ.get("NOTION_TOKEN"), os.environ.get("NOTION_PAGE_ID")
+    if not token or not sayfa:
+        print("Notion anahtarı tanımlı değil, Notion'a gönderilmedi.")
+        return
+    r = requests.post("https://api.notion.com/v1/pages", timeout=60, headers={
+        "Authorization": f"Bearer {token}", "Notion-Version": "2022-06-28"}, json={
+        "parent": {"page_id": sayfa}, "icon": {"type": "emoji", "emoji": "📊"},
+        "properties": {"title": {"title": [{"text": {"content": baslik.replace("📊 ", "")}}]}},
+        "children": notion_bloklari(govde)})
+    if r.status_code >= 400:
+        raise RuntimeError(f"Notion hatası ({r.status_code}): {r.text[:300]}")
+    print(f"Rapor Notion'a eklendi ✓ {r.json().get('url')}")
+
+
 def main(cfg, gonder=True):
     baslik, govde = rapor(cfg)
     print(baslik); print(govde)
-    if gonder:
-        subprocess.run(["gh", "issue", "create", "--title", baslik, "--body", govde, "--label", "rapor"],
-                       check=True)
-        print("Rapor GitHub Issue olarak açıldı ✓")
+    if not gonder:
+        print(json.dumps(notion_bloklari(govde), ensure_ascii=False)[:400])
+        return
+    try:
+        notiona_gonder(baslik, govde)
+    except Exception as e:
+        print(f"::warning::Notion'a gönderilemedi: {e}")
+    subprocess.run(["gh", "issue", "create", "--title", baslik, "--body", govde, "--label", "rapor"], check=True)
+    print("Rapor GitHub Issue olarak açıldı ✓")
 
 
 if __name__ == "__main__":

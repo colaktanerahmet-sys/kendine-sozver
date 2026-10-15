@@ -7,7 +7,7 @@
 - Kaydırmalı gönderiler: `karusel.py` → **`karusel` release**; salı/perşembe/cumartesi 16:45+ TR paylaşılır.
 - Her saatlik çalışmada `yorum.py` son 7 günün yanıtlanmamış yorumlarına kısa yanıt verir (`durum/yanitlanan.txt`).
 
-- Her pazartesi ~06:30 TR `rapor.py` haftalık istatistik raporunu GitHub Issue olarak açar (bildirim + e-posta).
+- Her pazartesi ~06:30 TR `rapor.py` haftalık istatistik raporunu Notion'daki "Kendine Söz Ver · Haftalık Raporlar" sayfasına (NOTION_TOKEN secret + NOTION_PAGE_ID variable) ve GitHub Issue olarak ekler.
 
 Yeni video eklemek (bilgisayarda):
 ```

@@ -64,6 +64,8 @@ jobs:
           ENC_KEY: ${{ secrets.ENC_KEY }}
           IG_USER_ID: ${{ vars.IG_USER_ID }}
           GH_TOKEN: ${{ github.token }}
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          NOTION_PAGE_ID: ${{ vars.NOTION_PAGE_ID }}
         run: python ci_paylas.py "${{ steps.v.outputs.vakit }}" ${{ inputs.dene && '--dene' || '' }}
 
       - name: Durumu kaydet
