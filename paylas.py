@@ -71,6 +71,30 @@ def siradaki(vakit):
     return None
 
 
+def bekle(cfg, kid):
+    """Instagram'ın kapsayıcıyı işlemesini bekle (en çok 10 dk)."""
+    for _ in range(60):
+        durum = cevap(requests.get(f"{API}/{kid}", params={"fields": "status_code,status",
+                                   "access_token": cfg["ig_access_token"]}, timeout=30))
+        if durum.get("status_code") == "FINISHED":
+            return
+        if durum.get("status_code") in ("ERROR", "EXPIRED"):
+            raise RuntimeError(f"Video işlenemedi: {durum.get('status')}")
+        time.sleep(10)
+    raise RuntimeError("Video 10 dakikada işlenmedi.")
+
+
+def hikaye(cfg, video_url):
+    """Aynı videoyu hikâyede de yayınla (mevcut takipçilerin görmesi için)."""
+    t, uid = cfg["ig_access_token"], cfg["ig_user_id"]
+    kid = cevap(requests.post(f"{API}/{uid}/media", timeout=60, data={
+        "media_type": "STORIES", "video_url": video_url, "access_token": t}))["id"]
+    bekle(cfg, kid)
+    yayin = cevap(requests.post(f"{API}/{uid}/media_publish", data={"creation_id": kid, "access_token": t},
+                                timeout=60))
+    print(f"Hikâye paylaşıldı ✓ {yayin['id']}")
+
+
 def paylas(cfg, mp4, video_url, yayinla=True):
     """video_url: Instagram'ın videoyu indireceği herkese açık (geçici olabilir) link.
     Instagram Login API'si doğrudan yüklemeyi (resumable) kabul etmiyor; link şart."""
@@ -84,16 +108,7 @@ def paylas(cfg, mp4, video_url, yayinla=True):
     kid = kap["id"]
 
     # 2) Instagram'ın videoyu işlemesini bekle
-    for _ in range(60):
-        durum = cevap(requests.get(f"{API}/{kid}", params={"fields": "status_code,status", "access_token": t},
-                                   timeout=30))
-        if durum.get("status_code") == "FINISHED":
-            break
-        if durum.get("status_code") in ("ERROR", "EXPIRED"):
-            raise RuntimeError(f"Video işlenemedi: {durum.get('status')}")
-        time.sleep(10)
-    else:
-        raise RuntimeError("Video 10 dakikada işlenmedi.")
+    bekle(cfg, kid)
     if not yayinla:
         print(f"Deneme başarılı ✓ Instagram {mp4.name} videosunu indirip işledi (YAYINLANMADI).")
         return None
@@ -112,7 +127,7 @@ def paylas(cfg, mp4, video_url, yayinla=True):
             shutil.move(str(p), hedef / p.name)
     KAYIT.parent.mkdir(parents=True, exist_ok=True)
     with open(KAYIT, "a") as f:
-        f.write(f"{datetime.datetime.now().isoformat(timespec='seconds')},{mp4.name},{yayin['id']},{link}\n")
+        f.write(f"{datetime.datetime.now(datetime.timezone.utc).isoformat(timespec='seconds')},{mp4.name},{yayin['id']},{link}\n")
     print(f"Paylaşıldı ✓ {mp4.name} → {link}")
     return link
 

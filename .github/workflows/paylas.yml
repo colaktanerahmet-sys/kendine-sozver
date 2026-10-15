@@ -3,17 +3,18 @@ name: paylas
 
 on:
   schedule:
-    - cron: "55 5 * * *"   # 08:55 TR  sabah  (gecikmeyle ~09:00)
-    - cron: "55 9 * * *"   # 12:55 TR  öğle   (~13:00)
-    - cron: "55 16 * * *"  # 19:55 TR  akşam  (~20:00)
+    # GitHub zamanlayıcısı gecikip bazı çalışmaları atlayabiliyor: 08:50–23:50 TR arası
+    # saatte bir bakılır, vakti gelmiş ve bugün paylaşılmamış olan paylaşılır
+    # (sabah 08:45, öğle 12:45, akşam 19:45 TR'den itibaren — ci_paylas.py VAKITLER).
+    - cron: "50 5-20 * * *"
     - cron: "30 3 * * 1"   # Pazartesi 06:30 TR  anahtar yenileme
   workflow_dispatch:
     inputs:
       vakit:
         description: "Elle çalıştır"
         type: choice
-        options: [sabah, ogle, aksam, yenile]
-        default: sabah
+        options: [oto, sabah, ogle, aksam, yenile]
+        default: oto
       dene:
         description: "Sadece dene (Instagram videoyu işler ama YAYINLAMAZ)"
         type: boolean
@@ -43,10 +44,8 @@ jobs:
         id: v
         run: |
           case "${{ github.event.schedule }}" in
-            "55 5 * * *")  v=sabah ;;
-            "55 9 * * *")  v=ogle ;;
-            "55 16 * * *") v=aksam ;;
-            "30 3 * * 1") v=yenile ;;
+            "50 5-20 * * *")    v=oto ;;
+            "30 3 * * 1")       v=yenile ;;
             *)            v="${{ inputs.vakit }}" ;;
           esac
           echo "vakit=$v" >> "$GITHUB_OUTPUT"
@@ -72,5 +71,6 @@ jobs:
           git config user.name "kendine-sozver-bot"
           git config user.email "bot@users.noreply.github.com"
           git add durum
-          git diff --cached --quiet || git commit -m "durum: ${{ steps.v.outputs.vakit }} $(date -u +%F)"
-          git push
+          git diff --cached --quiet && exit 0
+          git commit -m "durum: ${{ steps.v.outputs.vakit }} $(date -u +%F)"
+          git pull --rebase -q && git push
