@@ -154,7 +154,7 @@ def rapor(cfg):
             en = max(ort, key=ort.get)
             L.append(f"- En iyi giden: **{VAKIT_AD.get(en, en)}**. Benzer içerikleri artırmayı düşünebiliriz.")
         if icgoru_var and toplam("views"):
-            kay = toplam("saved") / max(toplam("reach"), 1) * 100
+            kay = toplam("saved") / max(toplam("reach") or toplam("views"), 1) * 100
             L.append(f"- Kaydetme oranı %{kay:.1f}. "
                      + ("Çok iyi, kaydedilen içerik daha çok öne çıkarılır." if kay >= 2 else
                         "Artırmak için kaydırmalı gönderiler ve \"kaydet\" çağrıları önemli."))
