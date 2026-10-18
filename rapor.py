@@ -72,7 +72,7 @@ def stok():
         return {}
 
 
-def rapor(cfg):
+def rapor(cfg, kaydet=True):
     uid = cfg["ig_user_id"]
     icerik = {o["id"]: o for o in json.loads((KOK / "icerik.json").read_text())}
     simdi = datetime.datetime.now(TR)
@@ -85,11 +85,12 @@ def rapor(cfg):
         satirlar = [s.split(",") for s in GECMIS.read_text().splitlines() if s and not s.startswith("tarih")]
         if satirlar:
             onceki = int(satirlar[-1][1])
-    GECMIS.parent.mkdir(exist_ok=True)
-    if not GECMIS.exists():
-        GECMIS.write_text("tarih,takipci,gonderi\n")
-    with open(GECMIS, "a") as f:
-        f.write(f"{simdi.date()},{hesap['followers_count']},{hesap['media_count']}\n")
+    if kaydet:  # deneme raporu haftalık karşılaştırmayı bozmasın
+        GECMIS.parent.mkdir(exist_ok=True)
+        if not GECMIS.exists():
+            GECMIS.write_text("tarih,takipci,gonderi\n")
+        with open(GECMIS, "a") as f:
+            f.write(f"{simdi.date()},{hesap['followers_count']},{hesap['media_count']}\n")
 
     # hesap geneli (izin varsa)
     hesap_ic = {}
@@ -246,7 +247,7 @@ def notiona_gonder(baslik, govde):
 
 
 def main(cfg, gonder=True):
-    baslik, govde = rapor(cfg)
+    baslik, govde = rapor(cfg, kaydet=gonder)
     print(baslik); print(govde)
     if not gonder:
         print(json.dumps(notion_bloklari(govde), ensure_ascii=False)[:400])
