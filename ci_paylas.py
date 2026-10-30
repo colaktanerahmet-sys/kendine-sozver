@@ -31,6 +31,26 @@ VAKITLER = [("sabah", 8, 45), ("ogle", 12, 45), ("aksam", 19, 45)]
 KARUSEL, KARUSEL_GUNLER, KARUSEL_SAAT = "karusel", set(range(7)), (16, 45)
 
 
+# Instagram "request limit" hatasında o iş için bu kadar beklenir (10 dakikada bir denemek limiti besler)
+LIMIT_BEKLEME = datetime.timedelta(hours=2)
+
+
+def limitte_mi(is_adi):
+    """Bu iş yakın zamanda limite takıldıysa True (işaret dosyası durum/'a yazılır, workflow commit'ler)."""
+    dosya = KOK / "durum" / f"limit_{is_adi}.txt"
+    if not dosya.exists():
+        return False
+    return datetime.datetime.now(datetime.timezone.utc) - datetime.datetime.fromisoformat(dosya.read_text().strip()) < LIMIT_BEKLEME
+
+
+def limit_isaretle(is_adi, limite_takildi):
+    dosya = KOK / "durum" / f"limit_{is_adi}.txt"
+    if limite_takildi:
+        dosya.write_text(datetime.datetime.now(datetime.timezone.utc).isoformat(timespec="seconds"))
+    else:
+        dosya.unlink(missing_ok=True)
+
+
 def gh(*args):
     return subprocess.run(["gh", *args], check=True, capture_output=True, text=True).stdout
 
@@ -170,11 +190,17 @@ def main():
                                  ("Karusel", karusel_zamani(), lambda: karusel_paylas(cfg, yayinla))]:
             if not kosul:
                 continue
+            anahtar = ad.split(" ")[0].lower()
+            if limitte_mi(anahtar):
+                print(f"::warning::{ad}: Instagram limiti nedeniyle {LIMIT_BEKLEME} bekleniyor, atlandı.")
+                continue
             print(f"→ {ad}")
             try:
                 is_fn()
+                limit_isaretle(anahtar, False)
             except Exception as e:
                 print(f"::error::{ad} paylaşılamadı: {e}")
+                limit_isaretle(anahtar, "request limit" in str(e).lower())
                 hata = True
     # yorumlara yarım saatte bir bak (Meta'yı gereksiz istekle yormamak için)
     if is_ == "yorum" or (is_ == "oto" and datetime.datetime.now(TR).minute % 30 < 10):

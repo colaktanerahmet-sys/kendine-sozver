@@ -95,6 +95,25 @@ def hikaye(cfg, video_url):
     print(f"Hikâye paylaşıldı ✓ {yayin['id']}")
 
 
+def kaydet(ad, medya_id, t):
+    """Yayın başarılı olur olmaz kaydı yaz: sonraki istekler (permalink) limite takılsa bile
+    aynı gönderi tekrar paylaşılmasın. Linki ayrıca almayı dener, olmazsa boş bırakır."""
+    KAYIT.parent.mkdir(parents=True, exist_ok=True)
+    zaman = datetime.datetime.now(datetime.timezone.utc).isoformat(timespec="seconds")
+    with open(KAYIT, "a") as f:
+        f.write(f"{zaman},{ad},{medya_id},\n")
+    try:
+        link = cevap(requests.get(f"{API}/{medya_id}", params={"fields": "permalink", "access_token": t},
+                                  timeout=30)).get("permalink", "")
+    except Exception as e:
+        print(f"::warning::Permalink alınamadı (paylaşım kayıtlı): {e}")
+        return ""
+    satirlar = KAYIT.read_text().splitlines()
+    satirlar[-1] = f"{zaman},{ad},{medya_id},{link}"
+    KAYIT.write_text("\n".join(satirlar) + "\n")
+    return link
+
+
 def karusel(cfg, ad, aciklama, gorsel_linkleri, yayinla=True):
     """Kaydırmalı gönderi: her görsel için bir alt kapsayıcı, sonra CAROUSEL kapsayıcısı."""
     t, uid = cfg["ig_access_token"], cfg["ig_user_id"]
@@ -112,11 +131,7 @@ def karusel(cfg, ad, aciklama, gorsel_linkleri, yayinla=True):
         return None
     yayin = cevap(requests.post(f"{API}/{uid}/media_publish", data={"creation_id": kid, "access_token": t},
                                 timeout=60))
-    link = cevap(requests.get(f"{API}/{yayin['id']}", params={"fields": "permalink", "access_token": t},
-                              timeout=30)).get("permalink", "")
-    KAYIT.parent.mkdir(parents=True, exist_ok=True)
-    with open(KAYIT, "a") as f:
-        f.write(f"{datetime.datetime.now(datetime.timezone.utc).isoformat(timespec='seconds')},{ad},{yayin['id']},{link}\n")
+    link = kaydet(ad, yayin["id"], t)
     print(f"Karusel paylaşıldı ✓ {ad} → {link}")
     return link
 
@@ -144,18 +159,14 @@ def paylas(cfg, mp4, video_url, yayinla=True):
     # 3) yayınla
     yayin = cevap(requests.post(f"{API}/{uid}/media_publish", data={"creation_id": kid, "access_token": t},
                                 timeout=60))
-    link = cevap(requests.get(f"{API}/{yayin['id']}", params={"fields": "permalink", "access_token": t},
-                              timeout=30)).get("permalink", "")
+    link = kaydet(mp4.name, yayin["id"], t)
 
-    # 4) arşivle + kayıt
+    # 4) arşivle
     hedef = KOK / "paylasildi"
     hedef.mkdir(exist_ok=True)
     for p in (mp4, mp4.with_suffix(".txt")):
         if p.exists():
             shutil.move(str(p), hedef / p.name)
-    KAYIT.parent.mkdir(parents=True, exist_ok=True)
-    with open(KAYIT, "a") as f:
-        f.write(f"{datetime.datetime.now(datetime.timezone.utc).isoformat(timespec='seconds')},{mp4.name},{yayin['id']},{link}\n")
     print(f"Paylaşıldı ✓ {mp4.name} → {link}")
     return link
 
