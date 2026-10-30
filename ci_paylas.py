@@ -131,7 +131,7 @@ def reels_paylas(cfg, icerik, vakit, yayinla):
     ad = adaylar[0]
     gh("release", "download", RELEASE, "-p", ad.replace(".mp4", ".txt"), "-D", str(hedef), "--clobber")
     paylas.paylas(cfg, hedef / ad, imzali_link(ad), yayinla=yayinla)
-    if yayinla:
+    if yayinla and not paylas.ZATEN_YAYINDA:
         ilk_yorum_yaz(cfg, vakit)
         try:  # hikâye olmazsa Reels yine paylaşılmış olur, iş başarısız sayılmaz
             paylas.hikaye(cfg, imzali_link(ad))
@@ -155,7 +155,7 @@ def karusel_paylas(cfg, yayinla):
     gh("release", "download", KARUSEL, "-p", f"{ad}.txt", "-D", str(hedef), "--clobber")
     aciklama = (hedef / f"{ad}.txt").read_text()
     paylas.karusel(cfg, ad, aciklama, [imzali_link(g, KARUSEL) for g in gorseller], yayinla=yayinla)
-    if yayinla:
+    if yayinla and not paylas.ZATEN_YAYINDA:
         ilk_yorum_yaz(cfg, "karusel")
 
 

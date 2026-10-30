@@ -114,9 +114,37 @@ def kaydet(ad, medya_id, t):
     return link
 
 
+ZATEN_YAYINDA = False  # son paylas()/karusel() çağrısı yeni yayın yerine var olanı mı buldu (ci_paylas yorum için bakar)
+TEKRAR_PENCERESI = datetime.timedelta(hours=3)
+
+
+def zaten_yayinda(cfg, ad, aciklama):
+    """Yayından önce Instagram'a sor: aynı açıklamalı gönderi son 3 saatte yayınlandıysa tekrar atma, kaydını yaz.
+    Yayın isteği hata dönse de gönderi bazen yayına çıkıyor (limit hatası); kayıt yoksa bu kontrol tekrarı keser.
+    Kontrolün kendisi hata verirse istisna fırlar → o çalışmada hiçbir şey yayınlanmaz (güvenli taraf)."""
+    global ZATEN_YAYINDA
+    ZATEN_YAYINDA = False
+    t, uid = cfg["ig_access_token"], cfg["ig_user_id"]
+    son = cevap(requests.get(f"{API}/{uid}/media", timeout=30, params={
+        "fields": "id,caption,permalink,timestamp", "limit": 30, "access_token": t})).get("data", [])
+    simdi = datetime.datetime.now(datetime.timezone.utc)
+    for m in son:
+        zaman = datetime.datetime.strptime(m["timestamp"], "%Y-%m-%dT%H:%M:%S%z")
+        if simdi - zaman < TEKRAR_PENCERESI and (m.get("caption") or "").strip() == aciklama.strip():
+            KAYIT.parent.mkdir(parents=True, exist_ok=True)
+            with open(KAYIT, "a") as f:
+                f.write(f"{zaman.isoformat(timespec='seconds')},{ad},{m['id']},{m.get('permalink', '')}\n")
+            print(f"::warning::{ad} zaten yayında ({m.get('permalink', m['id'])}); tekrar paylaşılmadı, kayıt eklendi.")
+            ZATEN_YAYINDA = True
+            return True
+    return False
+
+
 def karusel(cfg, ad, aciklama, gorsel_linkleri, yayinla=True):
     """Kaydırmalı gönderi: her görsel için bir alt kapsayıcı, sonra CAROUSEL kapsayıcısı."""
     t, uid = cfg["ig_access_token"], cfg["ig_user_id"]
+    if yayinla and zaten_yayinda(cfg, ad, aciklama):
+        return None
     cocuklar = []
     for link in gorsel_linkleri:
         cocuklar.append(cevap(requests.post(f"{API}/{uid}/media", timeout=60, data={
@@ -141,6 +169,9 @@ def paylas(cfg, mp4, video_url, yayinla=True):
     Instagram Login API'si doğrudan yüklemeyi (resumable) kabul etmiyor; link şart."""
     t, uid = cfg["ig_access_token"], cfg["ig_user_id"]
     aciklama = mp4.with_suffix(".txt").read_text() if mp4.with_suffix(".txt").exists() else ""
+
+    if yayinla and zaten_yayinda(cfg, mp4.name, aciklama):
+        return None
 
     # 1) kapsayıcı oluştur — Instagram videoyu bu andan itibaren linkten indirir
     kap = cevap(requests.post(f"{API}/{uid}/media", timeout=60, data={
